@@ -1,0 +1,19 @@
+---
+/** Logo Growia Group – tmavé pre svetlé podklady, svetlé pre tmavé. */
+import { Image } from 'astro:assets';
+import dark from '@/assets/logo/growia-group-dark.svg';
+import light from '@/assets/logo/growia-group-light.svg';
+import { site } from '@/config/site';
+
+interface Props {
+  tone?: 'dark' | 'light';
+  width?: number;
+  class?: string;
+}
+const { tone = 'dark', width = 150, class: className = '' } = Astro.props;
+const src = tone === 'dark' ? dark : light;
+---
+
+<a href="#top" aria-label={`${site.name}, späť na začiatok stránky`} class:list={['block flex-none', className]}>
+  <Image src={src} alt={site.name} width={width} height={Math.round((width * 234) / 486)} loading="eager" class="block h-auto" style={`width:${width}px`} />
+</a>

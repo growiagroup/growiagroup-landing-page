@@ -1,0 +1,53 @@
+---
+import { Picture } from 'astro:assets';
+import Button from '@/components/ui/Button.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import handshake from '@/assets/images/handshake.webp';
+import { process } from '@/data/process';
+import { site } from '@/config/site';
+---
+
+<Section id="ako" tone="dark" aria-labelledby="ako-title">
+  <div class="flex flex-wrap gap-x-[88px] gap-y-7 items-end justify-between">
+    <SectionHeading id="ako-title" tone="dark" eyebrow={process.eyebrow} title={process.title} class="flex-[1_1_480px]" />
+    <p class="flex-[1_1_360px] max-w-[26rem] m-0 text-lead text-sand">{process.lead}</p>
+  </div>
+
+  <ol class="mt-[clamp(44px,5vw,72px)] p-0 list-none grid grid-cols-[repeat(auto-fit,minmax(min(100%,240px),1fr))] gap-x-7">
+    {process.steps.map((step, index) => (
+      <li class="grid row-span-3 grid-rows-subgrid gap-y-[14px] items-start pt-7 pb-8 border-t border-bg/28">
+        <span aria-hidden="true" class="font-serif text-[42px] leading-none text-taupe">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        <h3 class="m-0 font-serif font-medium text-[22px] leading-[1.25]">{step.title}</h3>
+        <p class="m-0 text-[16px] leading-[1.6]">
+          <b class="block text-[11px] font-bold tracking-[0.14em] uppercase text-sand">{step.owner}</b>
+          {step.text}
+        </p>
+      </li>
+    ))}
+  </ol>
+
+  <div class="mt-[clamp(48px,6vw,80px)] flex flex-wrap gap-x-[clamp(28px,4vw,56px)] gap-y-8 items-center">
+    <div class="flex-[0_1_240px] aspect-[4/5] overflow-hidden rounded-sm">
+      <Picture
+        src={handshake}
+        alt={process.outcome.image.alt}
+        widths={[240, 480]}
+        sizes="240px"
+        formats={['avif']}
+        fallbackFormat="webp"
+        loading="lazy"
+        pictureAttributes={{ class: 'block w-full h-full' }}
+        class="block w-full h-full object-cover"
+      />
+    </div>
+    <div class="flex-[1_1_380px] max-w-[40rem] flex flex-col gap-8 items-start min-w-0">
+      <Eyebrow tone="sand">{process.outcome.eyebrow}</Eyebrow>
+      <h3 class="m-0 font-serif font-medium text-[clamp(24px,1.2rem+1.2vw,34px)] leading-[1.2]">{process.outcome.title}</h3>
+      <Button href={site.cta.href} variant="light" cta="process">{site.cta.label}</Button>
+    </div>
+  </div>
+</Section>

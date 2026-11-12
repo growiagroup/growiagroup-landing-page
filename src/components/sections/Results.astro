@@ -1,0 +1,28 @@
+---
+import CaseStudyCard from '@/components/ui/CaseStudyCard.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import Stat from '@/components/ui/Stat.astro';
+import { results } from '@/data/results';
+
+const labels = {
+  case: results.caseLabel,
+  challenge: results.challengeLabel,
+  results: results.resultsLabel,
+  benefit: results.benefitLabel,
+};
+---
+
+<Section id="vysledky" aria-labelledby="vysledky-title">
+  <SectionHeading id="vysledky-title" eyebrow={results.eyebrow} title={results.title} maxWidth="max-w-[46rem]" />
+
+  <div class="mt-[clamp(36px,4vw,56px)] grid grid-cols-[repeat(auto-fit,minmax(min(100%,260px),1fr))] gap-x-10 border-t-[1.5px] border-ink">
+    {results.stats.map((stat) => <Stat {...stat} />)}
+  </div>
+
+  <p class="m-0 mt-[30px] text-[12px] font-bold leading-[1.5]">{results.disclaimer}</p>
+
+  <div class="mt-[clamp(48px,6vw,80px)] grid grid-cols-[repeat(auto-fit,minmax(min(100%,440px),1fr))] gap-[clamp(20px,3vw,32px)]">
+    {results.cases.map((study) => <CaseStudyCard study={study} labels={labels} />)}
+  </div>
+</Section>

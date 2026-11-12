@@ -1,0 +1,18 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import Logo from '@/components/ui/Logo.astro';
+import { site } from '@/config/site';
+---
+
+<header class="bg-bg border-b border-ink/12">
+  <Container class="py-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+    <Logo />
+    <nav class="hide-sm flex gap-7 text-[16px] font-medium" aria-label="Sekcie stránky">
+      {site.nav.map((item) => (
+        <a href={item.href} class="no-underline py-[10px]">{item.label}</a>
+      ))}
+    </nav>
+    <Button href={site.cta.href} size="md" cta="header">{site.cta.label}</Button>
+  </Container>
+</header>

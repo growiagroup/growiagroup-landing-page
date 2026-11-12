@@ -1,31 +1,21 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import Section from '@/components/ui/Section.astro';
-import SectionHeading from '@/components/ui/SectionHeading.astro';
-import Button from '@/components/ui/Button.astro';
-import { site } from '@/config/site';
+import Header from '@/components/sections/Header.astro';
+import Hero from '@/components/sections/Hero.astro';
+import ForWhom from '@/components/sections/ForWhom.astro';
+import Process from '@/components/sections/Process.astro';
+import Results from '@/components/sections/Results.astro';
 ---
 
 <Layout
   title="Growia Group – externé obchodné oddelenie a B2B akvizícia"
-  description="Aktívne telefonicky oslovujeme potenciálnych zákazníkov vo vašom mene a vytvárame nové B2B obchodné príležitosti."
+  description="Aktívne telefonicky oslovujeme potenciálnych zákazníkov vo vašom mene, identifikujeme obchodný potenciál a vytvárame nové B2B obchodné príležitosti."
 >
+  <Header />
   <main>
-    <Section id="top" padding="hero">
-      <SectionHeading
-        as="h1"
-        eyebrow="externé obchodné oddelenie a B2B akvizícia"
-        title="Nové obchodné príležitosti pre váš B2B obchodný rast."
-        lead="Dočasná stránka – sekcie pribudnú."
-      />
-      <div class="mt-8 flex gap-4">
-        <Button href={site.cta.href} cta="hero">{site.cta.label}</Button>
-        <Button variant="outline" href="#ako">Outline</Button>
-      </div>
-    </Section>
-    <Section tone="dark">
-      <SectionHeading tone="dark" eyebrow="Tmavá sekcia" title="Test tmavej sekcie" lead="Lead text" />
-      <Button variant="light" class="mt-8" href="#">Light</Button>
-    </Section>
+    <Hero />
+    <ForWhom />
+    <Process />
+    <Results />
   </main>
 </Layout>
