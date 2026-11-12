@@ -167,6 +167,7 @@ ako *Data Layer Variable*. Tagy GA4 a Google Ads v GTM rešpektujú Consent Mode
 - [ ] Nahrať súbory fontu TT Ricordi Allegria do `public/fonts/`
 - [ ] Doplniť texty stránok *Ochrana osobných údajov* a *Zásady cookies*
 - [ ] Doplniť kontakt a firemné údaje v `src/config/site.ts`
-- [ ] Nahradiť iniciálky zakladateliek fotografiami (`src/data/team.ts`)
+- [ ] Doplniť spoločnú fotografiu zakladateliek (3:2) a portréty (4:5) v `src/data/team.ts`
+      (import obrázka zo `src/assets/images/` a priradenie do `groupPhoto` / `photo`)
 - [ ] Nastaviť e-mailové notifikácie formulára v Netlify
 - [ ] Overiť doručenie testovacej žiadosti z produkčnej domény

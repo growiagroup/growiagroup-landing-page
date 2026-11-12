@@ -10,9 +10,14 @@ export interface TeamMember {
   photo?: ImageMetadata;
 }
 
+/** Spoločná fotografia zakladateliek 3:2 (min. 1600 × 1067 px). Ak chýba, zobrazí sa vzorovaný blok. */
+const groupPhoto: ImageMetadata | undefined = undefined;
+
 export const team = {
   eyebrow: 'O nás',
   title: 'Ľudia za Growia Group',
+  groupPhoto,
+  groupPhotoAlt: 'Zakladateľky Growia Group',
   intro:
     'Growia Group vznikla spojením dlhoročných skúseností a spoločnej vízie, že kvalitný obchod stojí na ľuďoch, dôvere a systematickej práci. Naším cieľom je pomáhať firmám získavať nových zákazníkov a poskytovať im obchodnú podporu, ktorá funguje ako prirodzená súčasť ich vlastného tímu.',
   members: [
