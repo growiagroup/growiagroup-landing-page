@@ -1,7 +1,12 @@
 ---
 import '@/styles/global.css';
+import Seo from '@/components/seo/Seo.astro';
+import JsonLd from '@/components/seo/JsonLd.astro';
+import GoogleTagManager from '@/components/analytics/GoogleTagManager.astro';
+import CookieConsent from '@/components/analytics/CookieConsent.astro';
 import { site } from '@/config/site';
 import { availableHeadingFonts, fontFaceCss } from '@/lib/headingFont';
+import { webPageSchema } from '@/lib/structuredData';
 
 interface Props {
   title: string;
@@ -14,7 +19,6 @@ interface Props {
 
 const { title, description, path = '/', noindex = false } = Astro.props;
 const headingFontCss = fontFaceCss(availableHeadingFonts());
-const canonical = new URL(path === '/' ? '/' : path, site.url).href;
 ---
 
 <!doctype html>
@@ -22,17 +26,21 @@ const canonical = new URL(path === '/' ? '/' : path, site.url).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <Seo title={title} description={description} path={path} noindex={noindex} />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="generator" content={Astro.generator} />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#f5f0e8" />
+    <meta name="generator" content={Astro.generator} />
     {headingFontCss && <style set:html={headingFontCss} />}
+    <JsonLd data={webPageSchema(title, description, path)} />
+    <slot name="head" />
+    <GoogleTagManager part="head" />
   </head>
   <body>
+    <GoogleTagManager part="body" />
     <slot />
+    <CookieConsent />
   </body>
 </html>

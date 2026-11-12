@@ -1,0 +1,55 @@
+---
+/**
+ * Google Tag Manager + Consent Mode v2.
+ * part="head": predvolený súhlas (denied) + GTM skript. Patrí do <head>.
+ * part="body": noscript iframe. Patrí hneď za <body>.
+ * Ak je site.gtmId prázdne, nevykreslí nič.
+ */
+import { site } from '@/config/site';
+import { CONSENT_DEFAULTS } from '@/lib/consent';
+
+interface Props {
+  part: 'head' | 'body';
+}
+const { part } = Astro.props;
+const id = site.gtmId;
+
+/*
+ * Inline skript (musí bežať pred GTM, preto nie je bundlovaný):
+ * 1. nastaví predvolený súhlas,
+ * 2. ak už návštevník rozhodol (cookie cc_cookie z cookie lišty), aplikuje jeho voľbu,
+ * 3. načíta GTM.
+ */
+const headScript = `
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',${JSON.stringify({ ...CONSENT_DEFAULTS, wait_for_update: 500 })});
+gtag('set','ads_data_redaction',true);
+(function(){
+  try{
+    var m=document.cookie.match(/(?:^|; )cc_cookie=([^;]*)/);
+    if(!m)return;
+    var c=JSON.parse(decodeURIComponent(m[1])).categories||[];
+    var a=c.indexOf('analytics')>-1?'granted':'denied';
+    var k=c.indexOf('marketing')>-1?'granted':'denied';
+    gtag('consent','update',{analytics_storage:a,ad_storage:k,ad_user_data:k,ad_personalization:k,personalization_storage:k});
+  }catch(e){}
+})();
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',${JSON.stringify(id)});
+`.trim();
+---
+
+{id && part === 'head' && <script is:inline set:html={headScript} />}
+{
+  id && part === 'body' && (
+    <noscript>
+      <iframe
+        src={`https://www.googletagmanager.com/ns.html?id=${id}`}
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+        title="Google Tag Manager"
+      />
+    </noscript>
+  )
+}

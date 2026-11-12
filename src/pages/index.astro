@@ -10,12 +10,19 @@ import Models from '@/components/sections/Models.astro';
 import Faq from '@/components/sections/Faq.astro';
 import Consultation from '@/components/sections/Consultation.astro';
 import Footer from '@/components/sections/Footer.astro';
+import JsonLd from '@/components/seo/JsonLd.astro';
+import { faqSchema, organizationSchema } from '@/lib/structuredData';
+
+const title = 'Growia Group – externé obchodné oddelenie a B2B akvizícia';
+const description =
+  'Aktívne telefonicky oslovujeme potenciálnych zákazníkov vo vašom mene, identifikujeme obchodný potenciál a vytvárame nové B2B obchodné príležitosti.';
 ---
 
-<Layout
-  title="Growia Group – externé obchodné oddelenie a B2B akvizícia"
-  description="Aktívne telefonicky oslovujeme potenciálnych zákazníkov vo vašom mene, identifikujeme obchodný potenciál a vytvárame nové B2B obchodné príležitosti."
->
+<Layout title={title} description={description} path="/">
+  <Fragment slot="head">
+    <JsonLd data={organizationSchema(description)} />
+    <JsonLd data={faqSchema()} />
+  </Fragment>
   <Header />
   <main>
     <Hero />

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /dakujeme
+
+Sitemap: https://go.growiagroup.sk/sitemap-index.xml

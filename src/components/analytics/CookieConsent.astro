@@ -1,0 +1,109 @@
+---
+/**
+ * Cookie lišta (vanilla-cookieconsent v3) prepojená na Google Consent Mode v2.
+ * Tlačidlá s atribútom data-cc="show-preferencesModal" otvoria nastavenia.
+ */
+---
+
+<script>
+  import 'vanilla-cookieconsent/dist/cookieconsent.css';
+  import * as CookieConsent from 'vanilla-cookieconsent';
+  import { cookieConsentTexts } from '@/data/cookieConsent';
+  import { consentFromCategories } from '@/lib/consent';
+
+  type Gtag = (...args: unknown[]) => void;
+  declare global {
+    interface Window {
+      dataLayer?: unknown[];
+      gtag?: Gtag;
+    }
+  }
+
+  function applyConsent(categories: string[]) {
+    const consent = consentFromCategories(categories);
+    window.dataLayer = window.dataLayer ?? [];
+    const gtag: Gtag =
+      window.gtag ??
+      function () {
+        // eslint-disable-next-line prefer-rest-params
+        window.dataLayer!.push(arguments);
+      };
+    gtag('consent', 'update', consent);
+    window.dataLayer.push({ event: 'cookie_consent_update', consent_categories: categories });
+  }
+
+  CookieConsent.run({
+    guiOptions: {
+      consentModal: { layout: 'box', position: 'bottom left', equalWeightButtons: true, flipButtons: false },
+      preferencesModal: { layout: 'box', equalWeightButtons: true, flipButtons: false },
+    },
+    categories: {
+      necessary: { enabled: true, readOnly: true },
+      analytics: {},
+      marketing: {},
+    },
+    language: {
+      default: 'sk',
+      translations: {
+        sk: {
+          consentModal: { ...cookieConsentTexts.consentModal },
+          preferencesModal: {
+            ...cookieConsentTexts.preferencesModal,
+            sections: cookieConsentTexts.preferencesModal.sections.map((s) => ({ ...s })),
+          },
+        },
+      },
+    },
+    onConsent: ({ cookie }) => applyConsent(cookie.categories),
+    onChange: ({ cookie }) => applyConsent(cookie.categories),
+  });
+</script>
+
+<style is:global>
+  /* Prispôsobenie vzhľadu cookie lišty dizajnu webu */
+  #cc-main {
+    --cc-font-family: var(--font-sans);
+    --cc-bg: #f5f0e8;
+    --cc-primary-color: #393431;
+    --cc-secondary-color: #5f5955;
+    --cc-btn-primary-bg: #742f46;
+    --cc-btn-primary-color: #ffffff;
+    --cc-btn-primary-border-color: #742f46;
+    --cc-btn-primary-hover-bg: #5c2337;
+    --cc-btn-primary-hover-border-color: #5c2337;
+    --cc-btn-primary-hover-color: #ffffff;
+    --cc-btn-secondary-bg: #ede5dc;
+    --cc-btn-secondary-color: #393431;
+    --cc-btn-secondary-border-color: #ede5dc;
+    --cc-btn-secondary-hover-bg: #ddd0c3;
+    --cc-btn-secondary-hover-border-color: #ddd0c3;
+    --cc-btn-secondary-hover-color: #393431;
+    --cc-separator-border-color: rgb(57 52 49 / 0.14);
+    --cc-toggle-on-bg: #742f46;
+    --cc-toggle-off-bg: #aa978d;
+    --cc-toggle-readonly-bg: #d9cfc5;
+    --cc-toggle-on-knob-bg: #ffffff;
+    --cc-cookie-category-block-bg: #ede5dc;
+    --cc-cookie-category-block-border: #ede5dc;
+    --cc-cookie-category-block-hover-bg: #e4dacd;
+    --cc-cookie-category-block-hover-border: #e4dacd;
+    --cc-overlay-bg: rgb(57 52 49 / 0.6);
+    --cc-footer-bg: #ede5dc;
+    --cc-footer-color: #5f5955;
+    --cc-footer-border-color: #ddd0c3;
+    --cc-link-color: #742f46;
+    --cc-modal-border-radius: 4px;
+    --cc-btn-border-radius: 999px;
+    --cc-pm-toggle-border-radius: 999px;
+    --cc-modal-transition-duration: 0.2s;
+  }
+  #cc-main .cm__title,
+  #cc-main .pm__title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+  }
+  #cc-main .cm__btn,
+  #cc-main .pm__btn {
+    font-weight: 700;
+  }
+</style>
