@@ -10,7 +10,7 @@ export interface TeamMember {
   photo?: ImageMetadata;
 }
 
-/** Spoločná fotografia zakladateliek 3:2 (min. 1600 × 1067 px). Ak chýba, zobrazí sa vzorovaný blok. */
+/** Spoločná fotografia zakladateliek (min. 1600 × 1067 px). Zobrazuje sa v pomere 589:248 ako v dizajne, orezaná na stred. Ak chýba, zobrazí sa vzorovaný blok. */
 const groupPhoto: ImageMetadata | undefined = undefined;
 
 export const team = {
