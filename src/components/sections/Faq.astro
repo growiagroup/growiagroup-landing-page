@@ -14,9 +14,28 @@ import { site } from '@/config/site';
     <Button href={site.cta.href} variant="outline" cta="faq">{site.cta.label}</Button>
   </div>
 
-  <div class="flex-[7_1_420px] min-w-0 border-t border-ink/32">
+  <div class="flex-[7_1_420px] min-w-0 border-t border-ink/32" data-faq-group>
     {faq.items.map((item, index) => (
-      <FaqItem id={`faq-${index + 1}`} question={item.question} answer={item.answer} open={index === 0} />
+      <FaqItem id={`faq-${index + 1}`} question={item.question} answer={item.answer} open={index === 0} group="faq" />
     ))}
   </div>
 </Section>
+
+<script>
+  // Záloha pre prehliadače bez podpory atribútu `name` na <details>:
+  // pri otvorení jednej otázky zatvorí ostatné v skupine.
+  const supportsExclusive = 'name' in document.createElement('details');
+  if (!supportsExclusive) {
+    document.querySelectorAll<HTMLElement>('[data-faq-group]').forEach((groupEl) => {
+      const items = Array.from(groupEl.querySelectorAll<HTMLDetailsElement>('details'));
+      items.forEach((item) => {
+        item.addEventListener('toggle', () => {
+          if (!item.open) return;
+          items.forEach((other) => {
+            if (other !== item) other.open = false;
+          });
+        });
+      });
+    });
+  }
+</script>
