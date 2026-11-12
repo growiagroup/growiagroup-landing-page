@@ -1,6 +1,18 @@
 ---
 /**
- * Položka FAQ postavená na <details class="group border-b border-ink/32" open={open} id={id}>
+ * Položka FAQ postavená na natívnom rozbaľovacom prvku prehliadača:
+ * funguje aj bez JavaScriptu, ikona +/− sa prepína čisto cez CSS.
+ */
+interface Props {
+  question: string;
+  answer: string;
+  open?: boolean;
+  id: string;
+}
+const { question, answer, open = false, id } = Astro.props;
+---
+
+<details class="group border-b border-ink/32" open={open} id={id}>
   <summary class="list-none cursor-pointer [&::-webkit-details-marker]:hidden">
     <h3 class="m-0 min-h-[56px] py-5 flex items-center justify-between gap-4 font-sans text-[18px] font-bold leading-[1.4]">
       <span>{question}</span>
