@@ -1,0 +1,38 @@
+---
+/**
+ * Hlavička sekcie: eyebrow + nadpis + voliteľný úvodný text.
+ * tone="dark" sa používa na tmavých sekciách.
+ */
+import Eyebrow from './Eyebrow.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead?: string;
+  tone?: 'light' | 'dark';
+  as?: 'h1' | 'h2';
+  id?: string;
+  class?: string;
+  /** Max. šírka bloku, napr. "max-w-[46rem]". */
+  maxWidth?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  lead,
+  tone = 'light',
+  as: Heading = 'h2',
+  id,
+  class: className = '',
+  maxWidth = '',
+} = Astro.props;
+
+const leadColor = tone === 'dark' ? 'text-sand' : 'text-ink-2';
+---
+
+<div class:list={['flex flex-col gap-[18px] min-w-0', maxWidth, className]}>
+  <Eyebrow tone={tone === 'dark' ? 'sand' : 'accent'}>{eyebrow}</Eyebrow>
+  <Heading id={id} class="m-0 font-serif font-medium text-h2" set:html={title} />
+  {lead && <p class:list={['m-0 text-lead', leadColor]} set:html={lead} />}
+</div>

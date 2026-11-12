@@ -1,0 +1,43 @@
+---
+/**
+ * Sekcia stránky s jednotným vertikálnym odsadením a jedným z troch podkladov.
+ * tone: base (#F5F0E8) | muted (#EDE5DC) | dark (#393431 s krémovým textom)
+ */
+import Container from './Container.astro';
+
+interface Props {
+  id?: string;
+  tone?: 'base' | 'muted' | 'dark';
+  class?: string;
+  containerClass?: string;
+  /** Prvá sekcia (hero) má menšie horné odsadenie. */
+  padding?: 'default' | 'hero';
+  'aria-labelledby'?: string;
+}
+
+const {
+  id,
+  tone = 'base',
+  class: className = '',
+  containerClass = '',
+  padding = 'default',
+  'aria-labelledby': labelledby,
+} = Astro.props;
+
+const tones = {
+  base: 'bg-bg text-ink',
+  muted: 'bg-bg-2 text-ink',
+  dark: 'bg-ink text-bg',
+};
+
+const paddings = {
+  default: 'section-y',
+  hero: 'pt-[clamp(32px,5vw,72px)] pb-[clamp(72px,8vw,112px)]',
+};
+---
+
+<section id={id} aria-labelledby={labelledby} class:list={[tones[tone], paddings[padding], className]}>
+  <Container class={containerClass}>
+    <slot />
+  </Container>
+</section>

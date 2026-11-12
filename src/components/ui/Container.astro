@@ -1,0 +1,11 @@
+---
+/** Vnútorný obal sekcie: max. šírka 1280px a bočné odsadenie podľa dizajnu. */
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<div class:list={['wrap', className]}>
+  <slot />
+</div>

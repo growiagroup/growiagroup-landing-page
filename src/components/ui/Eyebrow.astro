@@ -1,0 +1,12 @@
+---
+/** Malý nadpis nad hlavným nadpisom sekcie (verzálky, široké medzery). */
+interface Props {
+  tone?: 'accent' | 'sand';
+  class?: string;
+  as?: 'p' | 'span';
+}
+const { tone = 'accent', class: className = '', as: Tag = 'p' } = Astro.props;
+const tones = { accent: 'text-accent', sand: 'text-sand' };
+---
+
+<Tag class:list={['eyebrow', tones[tone], className]}><slot /></Tag>

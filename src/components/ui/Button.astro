@@ -1,0 +1,57 @@
+---
+/**
+ * Tlačidlo / odkaz v tvare pilulky podľa dizajnu.
+ * variant: primary (vínové) | light (krémové na tmavom podklade) | outline (obrys)
+ * size: md (hlavička, pätička) | lg (CTA v sekciách)
+ */
+interface Props {
+  href?: string;
+  type?: 'button' | 'submit';
+  variant?: 'primary' | 'light' | 'outline';
+  size?: 'md' | 'lg';
+  fullWidth?: boolean;
+  class?: string;
+  /** Označenie pre meranie kliknutí (data-cta). */
+  cta?: string;
+  disabled?: boolean;
+}
+
+const {
+  href,
+  type = 'button',
+  variant = 'primary',
+  size = 'lg',
+  fullWidth = false,
+  class: className = '',
+  cta,
+  disabled = false,
+} = Astro.props;
+
+const base =
+  'inline-flex items-center justify-center rounded-full font-bold no-underline cursor-pointer border-0 transition-colors disabled:opacity-60 disabled:cursor-wait';
+
+const variants = {
+  primary: 'bg-accent text-white hover:bg-accent-hover hover:text-white',
+  light: 'bg-bg text-ink hover:bg-paper hover:text-ink',
+  outline: 'bg-transparent text-ink border-[1.5px] border-ink/32 hover:border-ink hover:text-ink',
+};
+
+const sizes = {
+  md: 'min-h-[46px] px-[22px] py-[11px] text-[15px]',
+  lg: 'min-h-[52px] px-[30px] py-[14px] text-[16px]',
+};
+
+const classes = [base, variants[variant], sizes[size], fullWidth && 'w-full', className];
+---
+
+{
+  href ? (
+    <a href={href} class:list={classes} data-cta={cta}>
+      <slot />
+    </a>
+  ) : (
+    <button type={type} class:list={classes} data-cta={cta} disabled={disabled}>
+      <slot />
+    </button>
+  )
+}

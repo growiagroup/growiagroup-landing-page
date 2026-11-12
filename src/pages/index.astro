@@ -1,9 +1,31 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '@/layouts/Layout.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import Button from '@/components/ui/Button.astro';
+import { site } from '@/config/site';
 ---
 
-<Layout title="Growia Group">
-	<main class="flex min-h-screen items-center justify-center bg-slate-50">
-		<h1 class="text-4xl font-bold text-slate-900">Growia Group</h1>
-	</main>
+<Layout
+  title="Growia Group – externé obchodné oddelenie a B2B akvizícia"
+  description="Aktívne telefonicky oslovujeme potenciálnych zákazníkov vo vašom mene a vytvárame nové B2B obchodné príležitosti."
+>
+  <main>
+    <Section id="top" padding="hero">
+      <SectionHeading
+        as="h1"
+        eyebrow="externé obchodné oddelenie a B2B akvizícia"
+        title="Nové obchodné príležitosti pre váš B2B obchodný rast."
+        lead="Dočasná stránka – sekcie pribudnú."
+      />
+      <div class="mt-8 flex gap-4">
+        <Button href={site.cta.href} cta="hero">{site.cta.label}</Button>
+        <Button variant="outline" href="#ako">Outline</Button>
+      </div>
+    </Section>
+    <Section tone="dark">
+      <SectionHeading tone="dark" eyebrow="Tmavá sekcia" title="Test tmavej sekcie" lead="Lead text" />
+      <Button variant="light" class="mt-8" href="#">Light</Button>
+    </Section>
+  </main>
 </Layout>
