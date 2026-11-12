@@ -75,9 +75,19 @@ Súbor `src/config/site.ts`. Konkrétne:
 
 ### Fonty
 - Manrope a Marcellus sa inštalujú cez npm (`@fontsource-variable/manrope`, `@fontsource/marcellus`).
-- **TT Ricordi Allegria** je licencovaný font. Súbory `.woff2` patria do `public/fonts/`
-  s názvami uvedenými v `src/styles/fonts.css`. Kým tam nie sú, prehliadač použije Marcellus
-  (font stack je `'TT Ricordi Allegria', Marcellus, Georgia, serif`).
+- **TT Ricordi Allegria** je licencovaný font. Súbory `.woff2` stačí nahrať do `public/fonts/`
+  s týmito názvami (rez určuje hrúbku písma):
+
+  | Súbor | font-weight |
+  | --- | --- |
+  | `TTRicordiAllegria-Regular.woff2` | 400 |
+  | `TTRicordiAllegria-Medium.woff2` | 500 |
+  | `TTRicordiAllegria-DemiBold.woff2` (alebo `-SemiBold`) | 600 |
+  | `TTRicordiAllegria-Bold.woff2` | 700 |
+
+  Pri builde sa pre existujúce súbory automaticky vygeneruje `@font-face` (`src/lib/headingFont.ts`),
+  takže netreba meniť kód. Kým súbory chýbajú, prehliadač použije Marcellus
+  (font stack je `'TT Ricordi Allegria', Marcellus, Georgia, serif`). Web používa rezy 500 a 600.
 
 ### Obrázky
 Zdrojové obrázky sú v `src/assets/`. Používajte komponent `<Image>` / `<Picture>` z `astro:assets`,
@@ -100,9 +110,22 @@ ktoré sa nemajú spracovávať (favicony, OG obrázok, fonty).
 
 - GTM sa načítava v `Layout.astro` cez komponent `GoogleTagManager.astro`, ID berie z `src/config/site.ts`.
 - Pred GTM sa nastaví Consent Mode v2 s predvoleným stavom `denied` pre všetky kategórie.
-- Cookie lišta (`vanilla-cookieconsent`) po súhlase zavolá `gtag('consent', 'update', …)`.
-  Kategórie: nevyhnutné (vždy), analytické, marketingové.
+- Cookie lišta (`vanilla-cookieconsent` v3, `src/components/analytics/CookieConsent.astro`) po súhlase
+  zavolá `gtag('consent', 'update', …)` a pošle do dataLayeru event `cookie_consent_update`
+  s parametrom `consent_categories`.
+  Kategórie: nevyhnutné (vždy), analytické → `analytics_storage`,
+  marketingové → `ad_storage`, `ad_user_data`, `ad_personalization`, `personalization_storage`.
+  Mapovanie je v `src/lib/consent.ts`.
+- Pri ďalšej návšteve sa uložená voľba (cookie `cc_cookie`) aplikuje inline skriptom ešte pred načítaním GTM.
+- Lišta sa nezobrazuje botom a crawlerom (predvolené správanie knižnice).
+- Tlačidlo s atribútom `data-cc="show-preferencesModal"` kdekoľvek na webe otvorí nastavenia cookies
+  (je v pätičke a na stránke Zásady cookies).
 - Texty lišty sú v `src/data/cookieConsent.ts`.
+
+### Nastavenie v GTM
+V kontajneri treba vytvoriť trigger typu *Custom Event* s názvom `generate_lead` a naviazať naň
+konverzný tag (GA4 event / Google Ads conversion). Premenné `form_name` a `challenge` sú dostupné
+ako *Data Layer Variable*. Tagy GA4 a Google Ads v GTM rešpektujú Consent Mode automaticky.
 
 ## Nasadenie (Netlify + GitHub)
 
@@ -122,6 +145,13 @@ ktoré sa nemajú spracovávať (favicony, OG obrázok, fonty).
 
 3. Po propagácii DNS Netlify automaticky vystaví certifikát Let's Encrypt (HTTPS).
 4. V Netlify nastavte `go.growiagroup.sk` ako **primary domain**, aby `*.netlify.app` presmerovávalo.
+
+## Testy a kontrola kvality
+
+- `npm test` – jednotkové testy (`vitest`) pre validáciu formulára, dataLayer, mapovanie súhlasu,
+  štruktúrované dáta a načítanie fontov.
+- `npm run check` – `astro check` (typy v `.astro` aj `.ts` súboroch).
+- Netlify spúšťa iba `npm run build`; testy spúšťajte lokálne pred pushom.
 
 ## SEO
 
