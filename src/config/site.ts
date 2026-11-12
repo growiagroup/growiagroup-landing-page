@@ -15,8 +15,8 @@ export const site = {
 
   /** Kontakt v pätičke. Prázdne hodnoty sa nezobrazia. */
   contact: {
-    email: '' as string,
-    phone: '' as string,
+    email: 'test@email.com' as string,
+    phone: '+421 975 547 567' as string,
   },
 
   /** Firemné údaje v pätičke. Prázdne hodnoty sa nezobrazia. */
