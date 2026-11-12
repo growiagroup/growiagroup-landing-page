@@ -1,0 +1,58 @@
+---
+/** Textové pole formulára s popisom, nápovedou a miestom pre chybovú hlášku. */
+interface Props {
+  id: string;
+  name: string;
+  label: string;
+  type?: 'text' | 'email';
+  autocomplete?: string;
+  inputmode?: 'email' | 'text';
+  required?: boolean;
+  hint?: string;
+  optionalNote?: string;
+  maxlength?: number;
+  class?: string;
+  /** Ďalšie atribúty (napr. data-*) sa prenesú na obaľujúci div. */
+  [key: `data-${string}`]: string | boolean | undefined;
+}
+
+const {
+  id,
+  name,
+  label,
+  type = 'text',
+  autocomplete,
+  inputmode,
+  required = false,
+  hint,
+  optionalNote,
+  maxlength,
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const hintId = hint ? `${id}-hint` : undefined;
+const errorId = `${id}-error`;
+const describedBy = [hintId, errorId].filter(Boolean).join(' ');
+---
+
+<div class:list={['flex flex-col gap-2', className]} data-field={name} {...rest}>
+  <label for={id} class="font-bold text-[15px]">
+    {label}{required && ' *'}
+    {optionalNote && <span class="font-normal text-ink-2"> {optionalNote}</span>}
+  </label>
+  <input
+    id={id}
+    name={name}
+    type={type}
+    autocomplete={autocomplete}
+    inputmode={inputmode}
+    maxlength={maxlength}
+    aria-required={required ? 'true' : undefined}
+    aria-invalid="false"
+    aria-describedby={describedBy}
+    class="form-input w-full min-h-[52px] px-[14px] py-[13px] font-sans text-[16px] text-ink bg-paper border-[1.5px] border-ink/32 rounded-sm aria-invalid:border-error"
+  />
+  {hint && <p id={hintId} class="m-0 text-[14px] text-ink-2">{hint}</p>}
+  <p id={errorId} class="m-0 text-[14px] font-semibold text-error" data-error-for={name} hidden></p>
+</div>

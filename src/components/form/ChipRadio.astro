@@ -1,0 +1,19 @@
+---
+/** Prepínač v tvare pilulky (radio skryté, vizuál na span). */
+interface Props {
+  id: string;
+  name: string;
+  value: string;
+  label: string;
+}
+const { id, name, value, label } = Astro.props;
+---
+
+<label class="relative inline-flex">
+  <input type="radio" id={id} name={name} value={value} class="peer absolute inset-0 w-full h-full m-0 opacity-0 cursor-pointer" />
+  <span
+    class="inline-flex items-center min-h-[44px] px-4 py-[10px] rounded-full border-[1.5px] border-ink/32 bg-paper text-[15px] font-medium transition-colors peer-checked:bg-ink peer-checked:border-ink peer-checked:text-bg peer-focus-visible:outline-2 peer-focus-visible:outline-accent peer-focus-visible:outline-offset-2"
+  >
+    {label}
+  </span>
+</label>

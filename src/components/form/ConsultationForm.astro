@@ -1,0 +1,218 @@
+---
+/**
+ * Formulár žiadosti o konzultáciu – Netlify Forms.
+ * - Bez JS: klasický POST, Netlify presmeruje na /dakujeme.
+ * - S JS: validácia, odoslanie cez fetch, stavy priamo v karte, event generate_lead.
+ */
+import Button from '@/components/ui/Button.astro';
+import Icon from '@/components/ui/Icon.astro';
+import ChipRadio from './ChipRadio.astro';
+import FormField from './FormField.astro';
+import { consultation } from '@/data/consultation';
+import { site } from '@/config/site';
+
+const f = consultation.form;
+---
+
+<div
+  class="flex-[6_1_400px] min-w-0 p-[clamp(24px,4vw,44px)] bg-bg text-ink rounded-sm shadow-form"
+  data-consultation
+  data-form-name={f.name}
+  data-other-value={f.otherValue}
+>
+  <div class="flex flex-col gap-4 items-start py-3" data-success hidden tabindex="-1">
+    <Icon name="check" class="text-accent" />
+    <h3 class="m-0 font-serif font-medium text-[28px]">{f.success.title}</h3>
+    <p class="m-0 text-ink-2">{f.success.text}</p>
+  </div>
+
+  <form
+    name={f.name}
+    method="POST"
+    action="/dakujeme"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
+    novalidate
+    aria-labelledby="form-title"
+    class="flex flex-col gap-[22px]"
+  >
+    <input type="hidden" name="form-name" value={f.name} />
+    <p class="hidden" aria-hidden="true">
+      <label>Toto pole nevypĺňajte: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+    </p>
+
+    <h3 id="form-title" class="m-0 font-serif font-medium text-[26px]">{f.title}</h3>
+    <p class="m-0 -mt-3 text-[14px] text-ink-2">{f.requiredNote}</p>
+
+    <div role="alert" class="px-4 py-[14px] border-[1.5px] border-error bg-error-bg rounded-sm text-[15px]" data-summary hidden>
+      <p class="m-0 mb-[6px] font-bold text-error">{f.summaryTitle}</p>
+      <ul class="m-0 p-0 list-none" data-summary-list></ul>
+    </div>
+
+    <FormField id="glp-name" name="name" label={f.fields.name.label} autocomplete="name" required />
+    <FormField
+      id="glp-email"
+      name="email"
+      type="email"
+      inputmode="email"
+      label={f.fields.email.label}
+      hint={f.fields.email.hint}
+      autocomplete="email"
+      required
+    />
+    <FormField id="glp-company" name="company" label={f.fields.company.label} autocomplete="organization" required />
+
+    <fieldset class="m-0 p-0 border-0 min-w-0 flex flex-col gap-2">
+      <legend class="p-0 font-bold text-[15px] leading-[1.4]">
+        {f.fields.challenge.legend} <span class="font-normal text-ink-2">{f.fields.challenge.optionalNote}</span>
+      </legend>
+      <div class="flex flex-wrap gap-[10px] mt-[6px]">
+        {f.challenges.map((option) => (
+          <ChipRadio id={`glp-ch-${option.value}`} name="challenge" value={option.value} label={option.label} />
+        ))}
+      </div>
+    </fieldset>
+
+    <FormField
+      id="glp-other"
+      name="challenge_other"
+      label={f.fields.challengeOther.label}
+      optionalNote={f.fields.challengeOther.optionalNote}
+      maxlength={200}
+      class="hidden"
+      data-other-field
+    />
+
+    <p role="alert" class="m-0 px-4 py-[14px] text-[15px] leading-[1.5] bg-error-bg border-[1.5px] border-error rounded-sm" data-server-error hidden>
+      <strong class="text-error">{f.serverErrorTitle}</strong> {f.serverError}
+    </p>
+
+    <div class="flex flex-col gap-3">
+      <Button type="submit" fullWidth cta="form-submit">
+        <span data-submit-label>{f.submit}</span>
+      </Button>
+      <p class="m-0 text-[15px] text-ink-2">{f.afterSubmitNote}</p>
+      <p class="m-0 text-[13px] leading-[1.5] text-ink-2">
+        {f.privacyNote}{' '}<a href={site.legal.privacy.href}>{f.privacyLinkLabel}</a>.
+      </p>
+    </div>
+  </form>
+</div>
+
+<script>
+  import { consultation } from '@/data/consultation';
+  import { pushGenerateLead } from '@/lib/dataLayer';
+  import { FORM_FIELDS, isValid, validateForm, type FormErrors, type FormField } from '@/lib/validateForm';
+
+  const labels: Record<FormField, string> = {
+    name: consultation.form.fields.name.label,
+    email: consultation.form.fields.email.label,
+    company: consultation.form.fields.company.label,
+  };
+
+  function init(root: HTMLElement) {
+    const form = root.querySelector<HTMLFormElement>('form');
+    if (!form) return;
+
+    const formName = root.dataset.formName ?? 'konzultacia';
+    const otherValue = root.dataset.otherValue ?? 'ine';
+    const success = root.querySelector<HTMLElement>('[data-success]');
+    const summary = form.querySelector<HTMLElement>('[data-summary]');
+    const summaryList = form.querySelector<HTMLElement>('[data-summary-list]');
+    const serverError = form.querySelector<HTMLElement>('[data-server-error]');
+    const otherField = form.querySelector<HTMLElement>('[data-other-field]');
+    const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]');
+    const idleLabel = submitLabel?.textContent ?? '';
+
+    let submitted = false;
+
+    const input = (field: FormField) => form.elements.namedItem(field) as HTMLInputElement;
+    const values = () => ({
+      name: input('name').value,
+      email: input('email').value,
+      company: input('company').value,
+    });
+
+    function render(errors: FormErrors, showSummary: boolean) {
+      for (const field of FORM_FIELDS) {
+        const message = errors[field];
+        const el = input(field);
+        const errorEl = form!.querySelector<HTMLElement>(`[data-error-for="${field}"]`);
+        el.setAttribute('aria-invalid', message ? 'true' : 'false');
+        if (errorEl) {
+          errorEl.textContent = message ?? '';
+          errorEl.hidden = !message;
+        }
+      }
+      if (summary && summaryList) {
+        summaryList.replaceChildren(
+          ...FORM_FIELDS.filter((field) => errors[field]).map((field) => {
+            const li = document.createElement('li');
+            li.textContent = `${labels[field]}: ${errors[field]}`;
+            return li;
+          }),
+        );
+        summary.hidden = !(showSummary && !isValid(errors));
+      }
+    }
+
+    function setSubmitting(state: boolean) {
+      if (submitButton) submitButton.disabled = state;
+      if (submitLabel) submitLabel.textContent = state ? consultation.form.submitting : idleLabel;
+    }
+
+    form.addEventListener('input', (event) => {
+      const target = event.target as HTMLInputElement;
+      if (serverError) serverError.hidden = true;
+      if (submitted && (FORM_FIELDS as readonly string[]).includes(target.name)) {
+        render(validateForm(values()), true);
+      }
+    });
+
+    form.addEventListener('change', (event) => {
+      const target = event.target as HTMLInputElement;
+      if (target.name === 'challenge' && otherField) {
+        otherField.classList.toggle('hidden', target.value !== otherValue);
+      }
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      submitted = true;
+      const errors = validateForm(values());
+      render(errors, true);
+      if (!isValid(errors)) {
+        const first = FORM_FIELDS.find((field) => errors[field]);
+        if (first) input(first).focus();
+        return;
+      }
+
+      if (serverError) serverError.hidden = true;
+      setSubmitting(true);
+      try {
+        const body = new URLSearchParams(new FormData(form) as unknown as Record<string, string>);
+        const response = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: body.toString(),
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const challenge = (form.elements.namedItem('challenge') as RadioNodeList | null)?.value ?? '';
+        pushGenerateLead(formName, challenge);
+
+        form.hidden = true;
+        if (success) {
+          success.hidden = false;
+          success.focus();
+        }
+      } catch {
+        if (serverError) serverError.hidden = false;
+        setSubmitting(false);
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-consultation]').forEach(init);
+</script>

@@ -14,6 +14,6 @@ const { tone = 'dark', width = 150, class: className = '' } = Astro.props;
 const src = tone === 'dark' ? dark : light;
 ---
 
-<a href="#top" aria-label={`${site.name}, späť na začiatok stránky`} class:list={['block flex-none', className]}>
+<a href="/" aria-label={`${site.name}, späť na začiatok stránky`} class:list={['block flex-none', className]}>
   <Image src={src} alt={site.name} width={width} height={Math.round((width * 234) / 486)} loading="eager" class="block h-auto" style={`width:${width}px`} />
 </a>

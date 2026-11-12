@@ -1,0 +1,23 @@
+---
+/** Záložná ďakovacia stránka – použije sa, keď sa formulár odošle bez JavaScriptu. */
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/sections/Header.astro';
+import Footer from '@/components/sections/Footer.astro';
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+import Icon from '@/components/ui/Icon.astro';
+import { consultation } from '@/data/consultation';
+---
+
+<Layout title="Ďakujeme – Growia Group" description={consultation.form.success.text} path="/dakujeme" noindex>
+  <Header />
+  <main>
+    <Section containerClass="max-w-[40rem] flex flex-col items-start gap-5 min-h-[50vh]">
+      <Icon name="check" class="text-accent" />
+      <h1 class="m-0 font-serif font-medium text-h2">{consultation.form.success.title}</h1>
+      <p class="m-0 text-lead text-ink-2">{consultation.form.success.text}</p>
+      <Button href="/" class="mt-2">Späť na úvodnú stránku</Button>
+    </Section>
+  </main>
+  <Footer />
+</Layout>

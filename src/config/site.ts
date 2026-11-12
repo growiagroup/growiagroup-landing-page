@@ -11,33 +11,33 @@ export const site = {
   tagline: 'Grow Together. Create Tomorrow.',
 
   /** Google Tag Manager – ID kontajnera. Prázdny reťazec GTM úplne vypne. */
-  gtmId: 'GTM-XXXXXXX',
+  gtmId: 'GTM-XXXXXXX' as string,
 
   /** Kontakt v pätičke. Prázdne hodnoty sa nezobrazia. */
   contact: {
-    email: '',
-    phone: '',
+    email: '' as string,
+    phone: '' as string,
   },
 
   /** Firemné údaje v pätičke. Prázdne hodnoty sa nezobrazia. */
   company: {
-    legalName: '',
-    address: '',
-    ico: '',
+    legalName: '' as string,
+    address: '' as string,
+    ico: '' as string,
   },
 
   /** Hlavné CTA – rovnaké naprieč celým webom. */
   cta: {
     label: 'Požiadať o konzultáciu',
-    href: '#konzultacia',
+    href: '/#konzultacia',
   },
 
   /** Navigácia v hlavičke aj v pätičke. */
   nav: [
-    { label: 'Ako to funguje', href: '#ako' },
-    { label: 'O nás', href: '#tim' },
-    { label: 'Modely spolupráce', href: '#modely' },
-    { label: 'Otázky', href: '#faq' },
+    { label: 'Ako to funguje', href: '/#ako' },
+    { label: 'O nás', href: '/#tim' },
+    { label: 'Modely spolupráce', href: '/#modely' },
+    { label: 'Otázky', href: '/#faq' },
   ],
 
   /** Právne stránky. */

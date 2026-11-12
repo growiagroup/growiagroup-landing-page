@@ -1,0 +1,61 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import Logo from '@/components/ui/Logo.astro';
+import { footer } from '@/data/footer';
+import { site } from '@/config/site';
+
+const hasContact = Boolean(site.contact.email || site.contact.phone);
+const companyLines = [site.company.legalName, site.company.address, site.company.ico && `IČO: ${site.company.ico}`].filter(Boolean);
+const linkClass = 'text-bg no-underline hover:text-sand';
+---
+
+<footer class="bg-ink text-sand border-t border-bg/14">
+  <Container class="pt-[clamp(56px,6vw,80px)] pb-8 flex flex-wrap gap-x-16 gap-y-10 items-start justify-between">
+    <div class="flex-[1_1_300px] max-w-[26rem] flex flex-col items-start gap-5 min-w-0">
+      <Logo tone="light" />
+      <p class="m-0 font-serif text-[24px] leading-[1.25] text-bg">{site.tagline}</p>
+      <Button href={site.cta.href} variant="light" size="md" cta="footer">{site.cta.label}</Button>
+    </div>
+
+    <div class="flex-[2_1_460px] flex flex-wrap gap-x-14 gap-y-8 justify-end text-[15px] min-w-0">
+      <nav class="flex flex-col gap-[10px]" aria-label="Sekcie stránky v pätičke">
+        <p class="m-0 mb-1 label-caps text-sand">{footer.navLabel}</p>
+        {site.nav.map((item) => (
+          <a href={item.href} class={linkClass}>{item.label}</a>
+        ))}
+      </nav>
+
+      {hasContact && (
+        <div class="flex flex-col items-start gap-[10px]">
+          <p class="m-0 mb-1 label-caps text-sand">{footer.contactLabel}</p>
+          {site.contact.email && <a href={`mailto:${site.contact.email}`} class={linkClass}>{site.contact.email}</a>}
+          {site.contact.phone && <a href={`tel:${site.contact.phone.replace(/\s+/g, '')}`} class={linkClass}>{site.contact.phone}</a>}
+        </div>
+      )}
+
+      <div class="flex flex-col items-start gap-[10px]">
+        <p class="m-0 mb-1 label-caps text-sand">{footer.legalLabel}</p>
+        <a href={site.legal.privacy.href} class="text-bg underline-offset-4 hover:text-sand">{site.legal.privacy.label}</a>
+        <a href={site.legal.cookies.href} class="text-bg underline-offset-4 hover:text-sand">{site.legal.cookies.label}</a>
+        <button type="button" data-cc="show-preferencesModal" class="p-0 border-0 bg-transparent font-sans text-[15px] text-bg underline underline-offset-4 cursor-pointer hover:text-sand">
+          {footer.cookieSettingsLabel}
+        </button>
+        {companyLines.length > 0 && (
+          <p class="m-0 mt-2 text-[13px] leading-[1.6]">
+            {companyLines.map((line, index) => (
+              <>
+                {index > 0 && <br />}
+                {line}
+              </>
+            ))}
+          </p>
+        )}
+      </div>
+    </div>
+
+    <div class="flex-[1_1_100%] flex flex-wrap gap-x-6 gap-y-2 pt-6 border-t border-bg/14 text-[13px]">
+      <span>{footer.copyright}</span>
+    </div>
+  </Container>
+</footer>

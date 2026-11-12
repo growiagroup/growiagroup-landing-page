@@ -1,0 +1,23 @@
+---
+import ConsultationForm from '@/components/form/ConsultationForm.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import { consultation } from '@/data/consultation';
+---
+
+<Section
+  id="konzultacia"
+  tone="dark"
+  aria-labelledby="konzultacia-title"
+  containerClass="flex flex-wrap gap-[clamp(40px,5vw,80px)] items-start"
+>
+  <SectionHeading
+    id="konzultacia-title"
+    tone="dark"
+    eyebrow={consultation.eyebrow}
+    title={consultation.title}
+    lead={consultation.lead}
+    class="flex-[5_1_340px] gap-[22px]"
+  />
+  <ConsultationForm />
+</Section>
