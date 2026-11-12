@@ -1,0 +1,14 @@
+---
+/** Malý štítok v tvare pilulky (rozsah modelu, odporúčanie). */
+interface Props {
+  tone?: 'accent' | 'taupe';
+  class?: string;
+}
+const { tone = 'accent', class: className = '' } = Astro.props;
+const tones = {
+  accent: 'text-accent bg-accent/8',
+  taupe: 'text-bg bg-taupe',
+};
+---
+
+<p class:list={['m-0 self-start px-3 py-[5px] rounded-full text-[13px] font-bold', tones[tone], className]}><slot /></p>

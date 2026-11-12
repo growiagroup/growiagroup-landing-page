@@ -1,0 +1,23 @@
+---
+import Button from '@/components/ui/Button.astro';
+import ModelCard from '@/components/ui/ModelCard.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import { models } from '@/data/models';
+import { site } from '@/config/site';
+---
+
+<Section id="modely" aria-labelledby="modely-title">
+  <SectionHeading id="modely-title" eyebrow={models.eyebrow} title={models.title} lead={models.lead} />
+
+  <div class="mt-[clamp(40px,5vw,64px)] grid grid-cols-[repeat(auto-fit,minmax(min(100%,300px),1fr))] gap-px bg-ink/18 border border-ink/18 rounded-sm overflow-hidden">
+    {models.items.map((model) => (
+      <ModelCard model={model} benefitLabel={models.benefitLabel} recommendedLabel={models.recommendedLabel} />
+    ))}
+  </div>
+
+  <div class="mt-8 flex flex-wrap gap-x-8 gap-y-[18px] items-center justify-between">
+    <p class="m-0 text-[18px] max-w-[44rem]">{models.footer}</p>
+    <Button href={site.cta.href} cta="models">{site.cta.label}</Button>
+  </div>
+</Section>

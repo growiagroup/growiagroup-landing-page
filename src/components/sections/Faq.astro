@@ -1,0 +1,22 @@
+---
+import Button from '@/components/ui/Button.astro';
+import FaqItem from '@/components/ui/FaqItem.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import { faq } from '@/data/faq';
+import { site } from '@/config/site';
+---
+
+<Section id="faq" tone="muted" aria-labelledby="faq-title" containerClass="flex flex-wrap gap-[clamp(36px,5vw,80px)] items-start">
+  <div class="flex-[5_1_320px] flex flex-col gap-[22px] items-start min-w-0">
+    <SectionHeading id="faq-title" eyebrow={faq.eyebrow} title={faq.title} />
+    <p class="m-0 text-ink-2">{faq.lead}</p>
+    <Button href={site.cta.href} variant="outline" cta="faq">{site.cta.label}</Button>
+  </div>
+
+  <div class="flex-[7_1_420px] min-w-0 border-t border-ink/32">
+    {faq.items.map((item, index) => (
+      <FaqItem id={`faq-${index + 1}`} question={item.question} answer={item.answer} open={index === 0} />
+    ))}
+  </div>
+</Section>

@@ -1,0 +1,24 @@
+---
+/** Karta modelu spolupráce (PILOT / GROWTH / PARTNERSHIP). */
+import Pill from './Pill.astro';
+import type { Model } from '@/data/models';
+
+interface Props {
+  model: Model;
+  benefitLabel: string;
+  recommendedLabel: string;
+}
+const { model, benefitLabel, recommendedLabel } = Astro.props;
+---
+
+<article class="flex flex-col gap-4 p-[clamp(24px,3vw,40px)] bg-bg">
+  <h3 class="m-0 font-serif font-medium text-[clamp(26px,1.3rem+1vw,34px)] tracking-[0.08em] leading-[1.35]">{model.name}</h3>
+  <p class="m-0 text-[18px] font-semibold text-ink-2">{model.tagline}</p>
+  <div class="flex flex-wrap gap-2">
+    <Pill>{model.scope}</Pill>
+    {model.recommended && <Pill tone="taupe">{recommendedLabel}</Pill>}
+  </div>
+  <p class="m-0 text-ink-2 min-h-[5.1em]">{model.text}</p>
+  <p class="m-0 text-[15px] font-bold text-accent">{benefitLabel}</p>
+  <p class="m-0 text-ink-2">{model.benefit}</p>
+</article>
