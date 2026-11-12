@@ -1,13 +1,13 @@
 ---
 /** Malý štítok v tvare pilulky (rozsah modelu, odporúčanie). */
 interface Props {
-  tone?: 'accent' | 'dark';
+  tone?: 'accent' | 'taupe';
   class?: string;
 }
 const { tone = 'accent', class: className = '' } = Astro.props;
 const tones = {
   accent: 'text-accent bg-accent/8',
-  dark: 'text-bg bg-ink',
+  taupe: 'text-bg bg-taupe',
 };
 ---
 
