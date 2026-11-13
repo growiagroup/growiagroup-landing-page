@@ -11,6 +11,12 @@ interface Props {
   path: string;
 }
 const { page, path } = Astro.props;
+
+/** RRRR-MM-DD → D. M. RRRR */
+const formatDate = (iso: string) => {
+  const [y, m, d] = iso.split('-').map(Number);
+  return `${d}. ${m}. ${y}`;
+};
 ---
 
 <Layout title={`${page.title} – Growia Group`} description={page.description} path={path}>
@@ -18,19 +24,39 @@ const { page, path } = Astro.props;
   <main>
     <Section containerClass="max-w-[52rem]">
       <h1 class="m-0 font-serif font-medium text-h2">{page.title}</h1>
-      {page.updated && <p class="m-0 mt-3 text-[14px] text-ink-2">Posledná aktualizácia: {page.updated}</p>}
+      {page.updated && (
+        <p class="m-0 mt-3 text-[14px] text-ink-2">Platné od {formatDate(page.updated)}</p>
+      )}
       {page.draft && (
         <p class="m-0 mt-6 px-4 py-3 rounded-sm bg-bg-2 border border-ink/18 text-[15px]">
           Tento dokument sa pripravuje. Finálne znenie doplníme čoskoro.
         </p>
       )}
-      <div class="mt-10 flex flex-col gap-8">
+      <div class="mt-10 flex flex-col gap-10 legal-body">
         {page.sections.map((section) => (
-          <section class="flex flex-col gap-3">
-            {section.heading && <h2 class="m-0 font-serif font-medium text-[24px] leading-[1.25]">{section.heading}</h2>}
-            {section.paragraphs.map((text) => (
-              <p class="m-0 text-ink-2" set:html={text} />
-            ))}
+          <section class="flex flex-col gap-4">
+            {section.heading && (
+              <h2 class="m-0 font-serif font-medium text-[24px] leading-[1.25]">{section.heading}</h2>
+            )}
+            {section.content.map((block) => {
+              if (typeof block === 'string') return <p class="m-0 text-ink-2" set:html={block} />;
+              if ('subheading' in block)
+                return <h3 class="m-0 mt-2 font-sans font-bold text-[17px] text-ink">{block.subheading}</h3>;
+              if ('list' in block)
+                return (
+                  <ul class="m-0 pl-5 flex flex-col gap-2 list-disc text-ink-2 marker:text-taupe">
+                    {block.list.map((item) => (
+                      <li set:html={item} />
+                    ))}
+                  </ul>
+                );
+              return (
+                <p class="m-0 text-ink-2">
+                  <strong class="block mb-1 font-bold text-ink">{block.term}</strong>
+                  <span set:html={block.text} />
+                </p>
+              );
+            })}
           </section>
         ))}
         <slot />
@@ -39,3 +65,13 @@ const { page, path } = Astro.props;
   </main>
   <Footer />
 </Layout>
+
+<style>
+  .legal-body :global(a) {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .legal-body :global(strong) {
+    color: var(--color-ink);
+  }
+</style>

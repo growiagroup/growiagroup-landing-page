@@ -63,6 +63,9 @@ Beží na doméne **go.growiagroup.sk**, hostovaný na Netlify, nasadzovaný aut
 
 ### Texty a obsah
 Všetky texty sú v `src/data/`. Každá sekcia má vlastný súbor (`hero.ts`, `faq.ts`, `team.ts`, …).
+Právne stránky sú v `legal.ts` ako zoznam sekcií; každá sekcia má bloky: odsek (reťazec s jednoduchým HTML),
+`{ subheading }`, `{ list: [...] }` alebo `{ term, text }`. Kontaktné a firemné údaje sa do textu
+dopĺňajú z `src/config/site.ts`, netreba ich prepisovať ručne.
 Komponenty obsah len vykresľujú, takže zmena textu je úprava jedného objektu.
 
 ### Doména, GTM, kontakty, firemné údaje
@@ -176,6 +179,7 @@ Consent Mode automaticky.
 ## Pred spustením do produkcie
 
 - [ ] Overiť, že Adobe Fonts kit má povolenú doménu `go.growiagroup.sk` a font display nastavený na `swap`
-- [ ] Doplniť texty stránok *Ochrana osobných údajov* a *Zásady cookies*
+- [ ] Doplniť text stránky *Zásady cookies* (`cookiesPage` v `src/data/legal.ts`, zatiaľ `draft: true`)
+- [ ] Nechať text *Ochrana osobných údajov* skontrolovať právnikom (`privacyPage` v `src/data/legal.ts`)
 - [ ] Nastaviť e-mailové notifikácie formulára v Netlify
 - [ ] Overiť doručenie testovacej žiadosti z produkčnej domény
