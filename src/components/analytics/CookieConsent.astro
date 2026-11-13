@@ -106,4 +106,19 @@
   #cc-main .pm__btn {
     font-weight: 700;
   }
+  /* Sekcie v nastaveniach dedia polomer tlačidiel – chceme jemné 4 px ako zvyšok webu */
+  #cc-main .pm__section,
+  #cc-main .pm__section--toggle,
+  #cc-main .pm__section-title,
+  #cc-main .pm__section--toggle .pm__section-desc-wrapper {
+    border-radius: 4px;
+  }
+  #cc-main .pm__section--toggle .pm__section-desc-wrapper {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  #cc-main .pm__section--toggle.is-expanded .pm__section-title {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 </style>
