@@ -1,6 +1,5 @@
 ---
-/** Profil člena tímu: portrét alebo iniciálky, bio a citát. */
-import { Picture } from 'astro:assets';
+/** Profil člena tímu: portrét alebo iniciálky, bio a citát. Portrét sa používa v dodanej veľkosti a kvalite, bez prekódovania. */
 import Icon from './Icon.astro';
 import type { TeamMember } from '@/data/team';
 
@@ -14,15 +13,13 @@ const { member } = Astro.props;
   {
     member.photo ? (
       <div class="flex-[0_0_200px] max-w-full aspect-[4/5] overflow-hidden rounded-sm bg-stone">
-        <Picture
-          src={member.photo}
+        <img
+          src={member.photo.src}
+          width={member.photo.width}
+          height={member.photo.height}
           alt={`Portrét: ${member.name}`}
-          widths={[200, 400]}
-          sizes="200px"
-          formats={['avif']}
-          fallbackFormat="webp"
           loading="lazy"
-          pictureAttributes={{ class: 'block w-full h-full' }}
+          decoding="async"
           class="block w-full h-full object-cover"
         />
       </div>

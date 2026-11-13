@@ -1,5 +1,4 @@
 ---
-import { Picture } from 'astro:assets';
 import Section from '@/components/ui/Section.astro';
 import SectionHeading from '@/components/ui/SectionHeading.astro';
 import TeamMember from '@/components/ui/TeamMember.astro';
@@ -15,15 +14,13 @@ import { team } from '@/data/team';
     {
       team.groupPhoto ? (
         <div class="aspect-[589/248] overflow-hidden rounded-sm bg-stone">
-          <Picture
-            src={team.groupPhoto}
+          <img
+            src={team.groupPhoto.src}
+            width={team.groupPhoto.width}
+            height={team.groupPhoto.height}
             alt={team.groupPhotoAlt}
-            widths={[600, 900, 1200]}
-            sizes="(max-width: 900px) 100vw, 600px"
-            formats={['avif']}
-            fallbackFormat="webp"
             loading="lazy"
-            pictureAttributes={{ class: 'block w-full h-full' }}
+            decoding="async"
             class="block w-full h-full object-cover object-[50%_20%]"
           />
         </div>
