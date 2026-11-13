@@ -9,7 +9,7 @@
   import 'vanilla-cookieconsent/dist/cookieconsent.css';
   import * as CookieConsent from 'vanilla-cookieconsent';
   import { cookieConsentTexts } from '@/data/cookieConsent';
-  import { cookieCategories, consentCookie, rootDomain } from '@/data/cookies';
+  import { cookieCategories, consentCookie } from '@/data/cookies';
   import { consentFromCategories } from '@/lib/consent';
 
   type Gtag = (...args: unknown[]) => void;
@@ -34,13 +34,11 @@
   }
 
   /**
-   * Cookies, ktoré lišta vymaže po odvolaní súhlasu s kategóriou. Google ich ukladá
-   * na hlavnú doménu, preto každý vzor uvádzame aj s doménou, aj bez nej.
+   * Cookies, ktoré lišta vymaže po odvolaní súhlasu s kategóriou. Maže len cookies
+   * uložené na doméne tohto webu; cookies hlavnej domény (growiagroup.sk) nechávame nedotknuté.
    */
   const autoClearFor = (patterns: RegExp[]) =>
-    patterns.length === 0
-      ? undefined
-      : { cookies: patterns.flatMap((name) => [{ name }, { name, domain: rootDomain }]) };
+    patterns.length === 0 ? undefined : { cookies: patterns.map((name) => ({ name })) };
 
   const categories = Object.fromEntries(
     cookieCategories.map((category) => [

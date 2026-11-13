@@ -19,13 +19,11 @@ export interface CookieCategory {
   title: string;
   description: string;
   cookies: CookieInfo[];
-  /** Vzory názvov cookies, ktoré lišta vymaže po odvolaní súhlasu s kategóriou. */
+  /** Vzory názvov cookies, ktoré lišta vymaže po odvolaní súhlasu s kategóriou (len na doméne webu). */
   autoClear: RegExp[];
 }
 
 const host = new URL(site.url).hostname;
-/** Doména bez subdomény (Google ukladá cookies na najvyššiu možnú doménu). */
-export const rootDomain = host.split('.').slice(-2).join('.');
 
 /** Platnosť cookie so súhlasom (predvolená hodnota knižnice vanilla-cookieconsent). */
 export const consentCookie = { name: 'cc_cookie', expiresAfterDays: 182 };

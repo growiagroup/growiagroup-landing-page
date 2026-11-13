@@ -69,7 +69,7 @@ Kontaktné a firemné údaje sa do textu dopĺňajú z `src/config/site.ts`, net
 
 Zoznam cookies je na jednom mieste v `src/data/cookies.ts`. Z neho sa generujú tabuľky na stránke
 *Zásady cookies* aj v okne nastavení cookie lišty a tiež vzory názvov cookies, ktoré lišta po odvolaní
-súhlasu automaticky vymaže (`autoClear`). Pri pridaní nového meracieho nástroja stačí doplniť riadok tam.
+súhlasu automaticky vymaže (`autoClear`, len na doméne webu, nie na hlavnej doméne growiagroup.sk). Pri pridaní nového meracieho nástroja stačí doplniť riadok tam.
 Komponenty obsah len vykresľujú, takže zmena textu je úprava jedného objektu.
 
 ### Doména, GTM, kontakty, firemné údaje
