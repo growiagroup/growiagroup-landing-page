@@ -1,11 +1,13 @@
-/** Texty cookie lišty a nastavení (vanilla-cookieconsent). Zoznam cookies je v cookies.ts. */
-import { cookieCategories, cookieTableFor } from './cookies';
+/**
+ * Texty cookie lišty a nastavení (vanilla-cookieconsent). Popisy kategórií sú v cookies.ts;
+ * tabuľky konkrétnych cookies sú zámerne len na stránke Zásady cookies, nie v okne nastavení.
+ */
+import { cookieCategories } from './cookies';
 
 const categorySections = cookieCategories.map((category) => ({
   title: category.title,
   description: category.description,
   linkedCategory: category.id,
-  cookieTable: cookieTableFor(category.id),
 }));
 
 export const cookieConsentTexts = {

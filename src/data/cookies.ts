@@ -1,7 +1,7 @@
 /**
- * Jediný zoznam cookies, ktoré web používa. Používa ho stránka Zásady cookies
- * aj okno nastavení cookie lišty (tabuľky v jednotlivých kategóriách a automatické
- * mazanie cookies po odvolaní súhlasu).
+ * Jediný zoznam cookies, ktoré web používa. Používa ho stránka Zásady cookies (tabuľky)
+ * a okno nastavení cookie lišty (názvy a popisy kategórií, automatické mazanie cookies
+ * po odvolaní súhlasu).
  */
 import { site } from '@/config/site';
 
@@ -93,17 +93,3 @@ export const cookieCategories: CookieCategory[] = [
     autoClear: [/^_gcl/],
   },
 ];
-
-/** Tabuľka cookies pre okno nastavení (formát knižnice vanilla-cookieconsent). */
-export const cookieTableHeaders = {
-  name: 'Názov',
-  provider: 'Poskytovateľ',
-  purpose: 'Účel',
-  expiry: 'Platnosť',
-} as const;
-
-export function cookieTableFor(id: CookieCategoryId) {
-  const category = cookieCategories.find((c) => c.id === id);
-  if (!category || category.cookies.length === 0) return undefined;
-  return { headers: { ...cookieTableHeaders }, body: category.cookies.map((c) => ({ ...c })) };
-}
