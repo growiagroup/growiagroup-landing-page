@@ -9,6 +9,7 @@
   import 'vanilla-cookieconsent/dist/cookieconsent.css';
   import * as CookieConsent from 'vanilla-cookieconsent';
   import { cookieConsentTexts } from '@/data/cookieConsent';
+  import { cookieCategories, consentCookie, rootDomain } from '@/data/cookies';
   import { consentFromCategories } from '@/lib/consent';
 
   type Gtag = (...args: unknown[]) => void;
@@ -32,25 +33,37 @@
     window.dataLayer.push({ event: 'cookie_consent_update', consent_categories: categories });
   }
 
+  /**
+   * Cookies, ktoré lišta vymaže po odvolaní súhlasu s kategóriou. Google ich ukladá
+   * na hlavnú doménu, preto každý vzor uvádzame aj s doménou, aj bez nej.
+   */
+  const autoClearFor = (patterns: RegExp[]) =>
+    patterns.length === 0
+      ? undefined
+      : { cookies: patterns.flatMap((name) => [{ name }, { name, domain: rootDomain }]) };
+
+  const categories = Object.fromEntries(
+    cookieCategories.map((category) => [
+      category.id,
+      category.id === 'necessary'
+        ? { enabled: true, readOnly: true }
+        : { autoClear: autoClearFor(category.autoClear) },
+    ]),
+  );
+
   CookieConsent.run({
+    cookie: { name: consentCookie.name, expiresAfterDays: consentCookie.expiresAfterDays },
     guiOptions: {
       consentModal: { layout: 'box', position: 'bottom left', equalWeightButtons: true, flipButtons: false },
       preferencesModal: { layout: 'box', equalWeightButtons: true, flipButtons: false },
     },
-    categories: {
-      necessary: { enabled: true, readOnly: true },
-      analytics: {},
-      marketing: {},
-    },
+    categories,
     language: {
       default: 'sk',
       translations: {
         sk: {
           consentModal: { ...cookieConsentTexts.consentModal },
-          preferencesModal: {
-            ...cookieConsentTexts.preferencesModal,
-            sections: cookieConsentTexts.preferencesModal.sections.map((s) => ({ ...s })),
-          },
+          preferencesModal: { ...cookieConsentTexts.preferencesModal },
         },
       },
     },

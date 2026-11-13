@@ -64,8 +64,12 @@ Beží na doméne **go.growiagroup.sk**, hostovaný na Netlify, nasadzovaný aut
 ### Texty a obsah
 Všetky texty sú v `src/data/`. Každá sekcia má vlastný súbor (`hero.ts`, `faq.ts`, `team.ts`, …).
 Právne stránky sú v `legal.ts` ako zoznam sekcií; každá sekcia má bloky: odsek (reťazec s jednoduchým HTML),
-`{ subheading }`, `{ list: [...] }` alebo `{ term, text }`. Kontaktné a firemné údaje sa do textu
-dopĺňajú z `src/config/site.ts`, netreba ich prepisovať ručne.
+`{ subheading }`, `{ list: [...] }`, `{ term, text }`, `{ table }` alebo `{ cookieSettingsButton }`.
+Kontaktné a firemné údaje sa do textu dopĺňajú z `src/config/site.ts`, netreba ich prepisovať ručne.
+
+Zoznam cookies je na jednom mieste v `src/data/cookies.ts`. Z neho sa generujú tabuľky na stránke
+*Zásady cookies* aj v okne nastavení cookie lišty a tiež vzory názvov cookies, ktoré lišta po odvolaní
+súhlasu automaticky vymaže (`autoClear`). Pri pridaní nového meracieho nástroja stačí doplniť riadok tam.
 Komponenty obsah len vykresľujú, takže zmena textu je úprava jedného objektu.
 
 ### Doména, GTM, kontakty, firemné údaje
@@ -179,7 +183,7 @@ Consent Mode automaticky.
 ## Pred spustením do produkcie
 
 - [ ] Overiť, že Adobe Fonts kit má povolenú doménu `go.growiagroup.sk` a font display nastavený na `swap`
-- [ ] Doplniť text stránky *Zásady cookies* (`cookiesPage` v `src/data/legal.ts`, zatiaľ `draft: true`)
-- [ ] Nechať text *Ochrana osobných údajov* skontrolovať právnikom (`privacyPage` v `src/data/legal.ts`)
+- [ ] Nechať texty *Ochrana osobných údajov* a *Zásady cookies* skontrolovať právnikom (`src/data/legal.ts`)
+- [ ] Po nasadení meracích značiek v GTM porovnať zoznam cookies v `src/data/cookies.ts` so skutočne ukladanými cookies
 - [ ] Nastaviť e-mailové notifikácie formulára v Netlify
 - [ ] Overiť doručenie testovacej žiadosti z produkčnej domény

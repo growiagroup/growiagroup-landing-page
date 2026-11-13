@@ -1,4 +1,13 @@
-/** Texty cookie lišty a nastavení (vanilla-cookieconsent). */
+/** Texty cookie lišty a nastavení (vanilla-cookieconsent). Zoznam cookies je v cookies.ts. */
+import { cookieCategories, cookieTableFor } from './cookies';
+
+const categorySections = cookieCategories.map((category) => ({
+  title: category.title,
+  description: category.description,
+  linkedCategory: category.id,
+  cookieTable: cookieTableFor(category.id),
+}));
+
 export const cookieConsentTexts = {
   consentModal: {
     title: 'Používame cookies',
@@ -20,21 +29,7 @@ export const cookieConsentTexts = {
         description:
           'Súbory cookies ukladáme vo vašom prehliadači. Nevyhnutné sú potrebné na fungovanie webu, ostatné kategórie sa aktivujú len s vaším súhlasom. Nastavenia môžete kedykoľvek zmeniť.',
       },
-      {
-        title: 'Nevyhnutné cookies',
-        description: 'Zabezpečujú základné fungovanie webu a uloženie vášho výberu. Nedajú sa vypnúť.',
-        linkedCategory: 'necessary',
-      },
-      {
-        title: 'Analytické cookies',
-        description: 'Pomáhajú nám pochopiť, ako návštevníci web používajú, aby sme ho mohli zlepšovať.',
-        linkedCategory: 'analytics',
-      },
-      {
-        title: 'Marketingové cookies',
-        description: 'Používajú sa na meranie účinnosti kampaní a zobrazovanie relevantnej reklamy.',
-        linkedCategory: 'marketing',
-      },
+      ...categorySections,
       {
         title: 'Viac informácií',
         description:
@@ -42,4 +37,4 @@ export const cookieConsentTexts = {
       },
     ],
   },
-} as const;
+};

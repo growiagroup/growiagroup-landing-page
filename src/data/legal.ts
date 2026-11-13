@@ -1,14 +1,19 @@
 /**
  * Texty právnych stránok. Každá stránka je zoznam sekcií, sekcia je zoznam blokov:
- * odsek (reťazec, môže obsahovať jednoduché HTML), podnadpis, odrážky alebo pojem s vysvetlením.
+ * odsek (reťazec, môže obsahovať jednoduché HTML), podnadpis, odrážky, pojem s vysvetlením,
+ * tabuľka alebo tlačidlo nastavení cookies.
  */
 import { site } from '@/config/site';
+import { cookieCategories, consentCookie } from './cookies';
 
 export type LegalBlock =
   | string
   | { subheading: string }
   | { list: string[] }
-  | { term: string; text: string };
+  | { term: string; text: string }
+  | { table: { headers: string[]; rows: string[][] } }
+  /** Tlačidlo, ktoré otvorí nastavenia cookies. */
+  | { cookieSettingsButton: string };
 
 export interface LegalSection {
   heading?: string;
@@ -329,26 +334,83 @@ export const privacyPage: LegalPage = {
   ],
 };
 
+const cookieTable = (id: (typeof cookieCategories)[number]['id']) => {
+  const category = cookieCategories.find((c) => c.id === id)!;
+  return {
+    table: {
+      headers: ['Názov', 'Poskytovateľ', 'Účel', 'Platnosť'],
+      rows: category.cookies.map((c) => [`<code>${c.name}</code>`, c.provider, c.purpose, c.expiry]),
+    },
+  };
+};
+
 export const cookiesPage: LegalPage = {
-  title: 'Zásady cookies',
-  description: 'Informácie o používaní súborov cookies na webe Growia Group.',
-  updated: '',
-  draft: true,
+  title: 'Zásady používania cookies',
+  description:
+    'Informácie o cookies, ktoré web Growia Group používa, o nástroji na správu súhlasu a o tom, ako môžete svoj súhlas zmeniť alebo odvolať.',
+  updated: '2026-11-13',
+  draft: false,
   sections: [
     {
-      heading: 'Čo sú cookies',
-      content: ['Text sa pripravuje. Krátke vysvetlenie, čo sú súbory cookies a na čo slúžia.'],
-    },
-    {
-      heading: 'Aké cookies používame',
       content: [
-        'Text sa pripravuje. Kategórie: nevyhnutné (uloženie súhlasu), analytické a marketingové (načítavané cez Google Tag Manager až po udelení súhlasu).',
+        'Informácie o cookies, ktoré táto stránka používa, a o tom, ako môžete spravovať svoj súhlas.',
+        `Prevádzkovateľom webovej stránky je ${company.legalName}, ${company.address}, IČO: ${company.ico}. Ďalšie informácie o spracúvaní osobných údajov nájdete v dokumente <a href="${site.legal.privacy.href}">Ochrana osobných údajov</a>.`,
       ],
     },
     {
-      heading: 'Ako zmeniť nastavenia',
+      heading: 'Čo sú cookies?',
       content: [
-        'Svoj súhlas môžete kedykoľvek zmeniť alebo odvolať tlačidlom nižšie alebo v nastaveniach prehliadača.',
+        'Cookies sú malé textové súbory, ktoré sa pri návšteve webovej stránky ukladajú do vášho prehliadača. Slúžia na to, aby stránka správne fungovala, zapamätala si vaše predvoľby a v niektorých prípadoch aj na meranie návštevnosti či cielenie reklamy.',
+        'Okrem cookies môžu niektoré nástroje používať aj podobné technológie, napríklad úložisko prehliadača (local storage) alebo identifikátory zariadenia. Tieto zásady sa vzťahujú aj na ne.',
+      ],
+    },
+    {
+      heading: 'Ako funguje súhlas s cookies',
+      content: [
+        'Pri prvej návšteve sa vám zobrazí cookie lišta. Kým sa nerozhodnete, web používa iba nevyhnutné cookies – analytické ani marketingové nástroje sa nespustia a žiadne údaje nespracúvajú.',
+        'Meracie nástroje načítavame cez Google Tag Manager s režimom Consent Mode v2. Ten je nastavený tak, že všetky voliteľné kategórie sú predvolene zamietnuté a aktivujú sa až po vašom súhlase. Keď súhlas odvoláte, cookies danej kategórie z vášho prehliadača vymažeme a nástroje sa prestanú načítavať.',
+        `Vaše rozhodnutie si pamätáme v cookie <code>${consentCookie.name}</code> po dobu ${Math.round(consentCookie.expiresAfterDays / 30)} mesiacov. Po jej uplynutí sa vás opýtame znova. Súhlas sa vzťahuje len na doménu ${new URL(site.url).hostname}.`,
+      ],
+    },
+    {
+      heading: 'Aké kategórie cookies používame?',
+      content: [
+        'Cookies delíme do troch kategórií. Pri každej uvádzame konkrétne cookies, ich poskytovateľa, účel a platnosť.',
+        ...cookieCategories.flatMap((category) => [
+          { subheading: category.title },
+          category.description,
+          cookieTable(category.id),
+        ]),
+        'Analytické a marketingové cookies poskytuje spoločnosť Google. Informácie o tom, ako Google používa údaje z webov, nájdete na stránke <a href="https://policies.google.com/technologies/partner-sites?hl=sk" rel="noopener" target="_blank">policies.google.com/technologies/partner-sites</a>. Konkrétne cookies sa môžu meniť podľa nastavenia meracích nástrojov; tento zoznam priebežne aktualizujeme.',
+      ],
+    },
+    {
+      heading: 'Ako svoj súhlas spravovať?',
+      content: [
+        'Pri prvej návšteve stránky sa vám zobrazí cookie lišta, v ktorej si môžete vybrať, ktoré kategórie cookies chcete povoliť – buď prijať všetky, ponechať iba nevyhnutné, alebo si v nastaveniach zapnúť jednotlivé kategórie.',
+        'Svoj súhlas môžete kedykoľvek upraviť alebo odvolať kliknutím na odkaz „Nastavenia cookies“ v pätičke stránky alebo tlačidlom nižšie. Odvolanie súhlasu nemá vplyv na zákonnosť spracúvania pred jeho odvolaním.',
+        { cookieSettingsButton: 'Zmeniť nastavenia cookies' },
+      ],
+    },
+    {
+      heading: 'Vymazanie cookies v prehliadači',
+      content: [
+        'Cookies si môžete kedykoľvek vymazať alebo zablokovať aj priamo vo vašom prehliadači. Ak zablokujete nevyhnutné cookies, web môže fungovať obmedzene a cookie lišta sa môže zobrazovať opakovane. Postup pre najpoužívanejšie prehliadače:',
+        {
+          list: [
+            '<a href="https://support.google.com/chrome/answer/95647?hl=sk" rel="noopener" target="_blank">Google Chrome</a>',
+            '<a href="https://support.mozilla.org/sk/kb/vymazanie-cookies-a-udajov-stranok" rel="noopener" target="_blank">Mozilla Firefox</a>',
+            '<a href="https://support.apple.com/sk-sk/guide/safari/sfri11471/mac" rel="noopener" target="_blank">Apple Safari</a>',
+            '<a href="https://support.microsoft.com/sk-sk/microsoft-edge/odstr%C3%A1nenie-s%C3%BAborov-cookie-v-prehliada%C4%8Di-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" rel="noopener" target="_blank">Microsoft Edge</a>',
+          ],
+        },
+      ],
+    },
+    {
+      heading: 'Kontakt',
+      content: [
+        `V prípade otázok ohľadom používania cookies nás kontaktujte na e-mailovej adrese ${emailLink}. Svoje práva súvisiace so spracúvaním osobných údajov môžete uplatniť spôsobom opísaným v dokumente <a href="${site.legal.privacy.href}">Ochrana osobných údajov</a>.`,
+        'Tieto zásady používania cookies sú platné od 13. 11. 2026.',
       ],
     },
   ],
