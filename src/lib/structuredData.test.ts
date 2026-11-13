@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { faq } from '@/data/faq';
+import { site } from '@/config/site';
 import { faqSchema, organizationSchema, plainText } from './structuredData';
 
 describe('plainText', () => {
@@ -20,10 +21,14 @@ describe('faqSchema', () => {
 });
 
 describe('organizationSchema', () => {
-  it('omits contact point when no e-mail is configured', () => {
+  it('mirrors site config: contact point only when an e-mail is configured', () => {
     const schema = organizationSchema('popis');
     expect(schema.name).toBe('Growia Group');
     expect(schema.url).toBe('https://go.growiagroup.sk');
-    expect('contactPoint' in schema).toBe(false);
+    if (site.contact.email) {
+      expect(schema.contactPoint?.[0]).toMatchObject({ '@type': 'ContactPoint', email: site.contact.email });
+    } else {
+      expect('contactPoint' in schema).toBe(false);
+    }
   });
 });

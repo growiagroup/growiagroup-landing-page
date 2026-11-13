@@ -18,7 +18,7 @@ export function organizationSchema(description: string) {
             '@type': 'ContactPoint',
             contactType: 'sales',
             email: site.contact.email,
-            ...(site.contact.phone ? { telephone: site.contact.phone } : {}),
+            ...(site.contact.phones.length ? { telephone: site.contact.phones[0] } : {}),
             availableLanguage: ['sk'],
           },
         ],
@@ -30,6 +30,10 @@ export function organizationSchema(description: string) {
     '@type': 'Organization',
     name: site.name,
     legalName: site.company.legalName || undefined,
+    ...(site.company.ico ? { taxID: site.company.dic || undefined, identifier: site.company.ico } : {}),
+    ...(site.company.address
+      ? { address: { '@type': 'PostalAddress', streetAddress: site.company.address.split(',')[0]?.trim(), addressLocality: 'Stupava', postalCode: '900 31', addressCountry: 'SK' } }
+      : {}),
     url: site.url,
     logo: new URL('/og-image.png', site.url).href,
     description,

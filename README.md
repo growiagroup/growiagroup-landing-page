@@ -70,8 +70,8 @@ Súbor `src/config/site.ts`. Konkrétne:
 
 - `siteUrl` – kanonická doména (`https://go.growiagroup.sk`)
 - `gtmId` – Google Tag Manager kontajner (`GTM-XXXXXXX`), zmena na tomto jednom mieste sa prejaví na celom webe
-- `contact` – e-mail, telefón (ak sú prázdne, v pätičke sa nezobrazia)
-- `company` – obchodné meno, sídlo, IČO (ak sú prázdne, v pätičke sa nezobrazia)
+- `contact` – e-mail a zoznam telefónov (ak sú prázdne, v pätičke sa nezobrazia)
+- `company` – obchodné meno, sídlo, IČO, DIČ (ak sú prázdne, v pätičke sa nezobrazia)
 
 ### Fonty
 - Manrope a Marcellus sa inštalujú cez npm (`@fontsource-variable/manrope`, `@fontsource/marcellus`).
@@ -167,10 +167,8 @@ ako *Data Layer Variable*. Tagy GA4 a Google Ads v GTM rešpektujú Consent Mode
 
 ## Pred spustením do produkcie
 
-- [ ] Doplniť GTM ID v `src/config/site.ts`
 - [ ] Overiť, že Adobe Fonts kit má povolenú doménu `go.growiagroup.sk` a font display nastavený na `swap`
 - [ ] Doplniť texty stránok *Ochrana osobných údajov* a *Zásady cookies*
-- [ ] Doplniť kontakt a firemné údaje v `src/config/site.ts`
 - [ ] Doplniť spoločnú fotografiu zakladateliek (3:2) a portréty (4:5) v `src/data/team.ts`
       (import obrázka zo `src/assets/images/` a priradenie do `groupPhoto` / `photo`)
 - [ ] Nastaviť e-mailové notifikácie formulára v Netlify

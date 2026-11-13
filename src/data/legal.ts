@@ -25,7 +25,9 @@ export const privacyPage: LegalPage = {
   sections: [
     {
       heading: 'Prevádzkovateľ',
-      paragraphs: ['Text sa pripravuje. Doplňte obchodné meno, sídlo, IČO a kontaktné údaje prevádzkovateľa.'],
+      paragraphs: [
+        'Prevádzkovateľom osobných údajov je spoločnosť GROWIA GROUP, s. r. o., so sídlom Okružná 2468/13, 900 31 Stupava, IČO: 55951686, DIČ: 2122140130. Kontakt: <a href="mailto:sales@growiagroup.sk">sales@growiagroup.sk</a>.',
+      ],
     },
     {
       heading: 'Aké údaje spracúvame a prečo',

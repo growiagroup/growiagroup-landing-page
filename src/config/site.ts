@@ -17,19 +17,20 @@ export const site = {
   fontKitUrl: 'https://use.typekit.net/mwn8kim.css' as string,
 
   /** Google Tag Manager – ID kontajnera. Prázdny reťazec GTM úplne vypne. */
-  gtmId: 'GTM-XXXXXXX' as string,
+  gtmId: 'GTM-W8WKVDTM' as string,
 
   /** Kontakt v pätičke. Prázdne hodnoty sa nezobrazia. */
   contact: {
-    email: 'test@email.com' as string,
-    phone: '+421 975 547 567' as string,
+    email: 'sales@growiagroup.sk' as string,
+    phones: ['+421 949 019 074', '+421 948 958 380'] as string[],
   },
 
   /** Firemné údaje v pätičke. Prázdne hodnoty sa nezobrazia. */
   company: {
-    legalName: '' as string,
-    address: '' as string,
-    ico: '' as string,
+    legalName: 'GROWIA GROUP, s. r. o.' as string,
+    address: 'Okružná 2468/13, 900 31 Stupava' as string,
+    ico: '55951686' as string,
+    dic: '2122140130' as string,
   },
 
   /** Hlavné CTA – rovnaké naprieč celým webom. */

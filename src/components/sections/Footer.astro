@@ -5,8 +5,13 @@ import Logo from '@/components/ui/Logo.astro';
 import { footer } from '@/data/footer';
 import { site } from '@/config/site';
 
-const hasContact = Boolean(site.contact.email || site.contact.phone);
-const companyLines = [site.company.legalName, site.company.address, site.company.ico && `IČO: ${site.company.ico}`].filter(Boolean);
+const hasContact = Boolean(site.contact.email || site.contact.phones.length);
+const companyLines = [
+  site.company.legalName,
+  site.company.address,
+  site.company.ico && `IČO: ${site.company.ico}`,
+  site.company.dic && `DIČ: ${site.company.dic}`,
+].filter(Boolean);
 const linkClass = 'text-bg no-underline hover:text-sand';
 ---
 
@@ -18,7 +23,7 @@ const linkClass = 'text-bg no-underline hover:text-sand';
       <Button href={site.cta.href} variant="light" size="md" cta="footer">{site.cta.label}</Button>
     </div>
 
-    <div class="flex-[2_1_460px] flex flex-wrap gap-x-14 gap-y-8 justify-end text-[15px] min-w-0">
+    <div class="flex-[2_1_460px] flex flex-wrap gap-x-14 gap-y-8 justify-start md:justify-end text-[15px] min-w-0">
       <nav class="flex flex-col gap-[10px]" aria-label="Sekcie stránky v pätičke">
         <p class="m-0 mb-1 label-caps text-sand">{footer.navLabel}</p>
         {site.nav.map((item) => (
@@ -30,7 +35,9 @@ const linkClass = 'text-bg no-underline hover:text-sand';
         <div class="flex flex-col items-start gap-[10px]">
           <p class="m-0 mb-1 label-caps text-sand">{footer.contactLabel}</p>
           {site.contact.email && <a href={`mailto:${site.contact.email}`} class={linkClass}>{site.contact.email}</a>}
-          {site.contact.phone && <a href={`tel:${site.contact.phone.replace(/\s+/g, '')}`} class={linkClass}>{site.contact.phone}</a>}
+          {site.contact.phones.map((phone) => (
+            <a href={`tel:${phone.replace(/\s+/g, '')}`} class={linkClass}>{phone}</a>
+          ))}
         </div>
       )}
 
