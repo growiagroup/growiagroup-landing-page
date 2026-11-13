@@ -20,7 +20,7 @@
   --color-error-bg: #fff8f6;
 
   --font-sans: "Manrope Variable", "Segoe UI", Roboto, Arial, sans-serif;
-  --font-serif: "TT Ricordi Allegria", Marcellus, Georgia, serif;
+  --font-serif: "TT Ricordi Allegria", "tt-ricordi-allegria", Marcellus, Georgia, serif;
 
   --radius-sm: 4px;
 

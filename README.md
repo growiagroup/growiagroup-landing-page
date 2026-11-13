@@ -75,7 +75,11 @@ Súbor `src/config/site.ts`. Konkrétne:
 
 ### Fonty
 - Manrope a Marcellus sa inštalujú cez npm (`@fontsource-variable/manrope`, `@fontsource/marcellus`).
-- **TT Ricordi Allegria** je licencovaný font. Súbory `.woff2` stačí nahrať do `public/fonts/`
+- **TT Ricordi Allegria** sa načítava z Adobe Fonts (Typekit) kitu, ktorého URL je v `src/config/site.ts`
+  (`fontKitUrl`). V kite musia byť povolené domény `go.growiagroup.sk` a `localhost` (pre vývoj)
+  a kit musí zostať aktívny v Adobe účte, ktorý ho vytvoril. Ak sa kit nenačíta, web plynulo
+  použije Marcellus.
+- Alternatívne (bez Adobe Fonts) stačí nahrať súbory `.woff2` do `public/fonts/`
   s týmito názvami (rez určuje hrúbku písma):
 
   | Súbor | font-weight |
@@ -164,7 +168,7 @@ ako *Data Layer Variable*. Tagy GA4 a Google Ads v GTM rešpektujú Consent Mode
 ## Pred spustením do produkcie
 
 - [ ] Doplniť GTM ID v `src/config/site.ts`
-- [ ] Nahrať súbory fontu TT Ricordi Allegria do `public/fonts/`
+- [ ] Overiť, že Adobe Fonts kit má povolenú doménu `go.growiagroup.sk` a font display nastavený na `swap`
 - [ ] Doplniť texty stránok *Ochrana osobných údajov* a *Zásady cookies*
 - [ ] Doplniť kontakt a firemné údaje v `src/config/site.ts`
 - [ ] Doplniť spoločnú fotografiu zakladateliek (3:2) a portréty (4:5) v `src/data/team.ts`

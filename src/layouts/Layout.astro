@@ -33,6 +33,15 @@ const headingFontCss = fontFaceCss(availableHeadingFonts());
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#f5f0e8" />
     <meta name="generator" content={Astro.generator} />
+    {
+      site.fontKitUrl && (
+        <>
+          <link rel="preconnect" href="https://use.typekit.net" crossorigin />
+          <link rel="preconnect" href="https://p.typekit.net" crossorigin />
+          <link rel="stylesheet" href={site.fontKitUrl} />
+        </>
+      )
+    }
     {headingFontCss && <style set:html={headingFontCss} />}
     <JsonLd data={webPageSchema(title, description, path)} />
     <slot name="head" />

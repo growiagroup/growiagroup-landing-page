@@ -10,6 +10,12 @@ export const site = {
   locale: 'sk_SK',
   tagline: 'Grow Together. Create Tomorrow.',
 
+  /**
+   * Adobe Fonts (Typekit) kit s nadpisovým fontom TT Ricordi Allegria.
+   * Prázdny reťazec kit vypne – vtedy sa použije Marcellus alebo súbory v public/fonts/.
+   */
+  fontKitUrl: 'https://use.typekit.net/mwn8kim.css' as string,
+
   /** Google Tag Manager – ID kontajnera. Prázdny reťazec GTM úplne vypne. */
   gtmId: 'GTM-XXXXXXX' as string,
 
