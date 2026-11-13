@@ -12,7 +12,7 @@ Beží na doméne **go.growiagroup.sk**, hostovaný na Netlify, nasadzovaný aut
 | Jazyk | TypeScript (strict) |
 | Fonty | Self-hostované: Manrope, Marcellus (fontsource) a TT Ricordi Allegria (vlastné súbory) |
 | Obrázky | Astro `<Image>` / `<Picture>` – AVIF/WebP, responzívne veľkosti |
-| Formulár | Netlify Forms (natívne), odosielanie cez `fetch`, záloha bez JS na `/dakujeme` |
+| Formulár | Netlify Forms (natívne), odosielanie cez `fetch`, po úspechu presmerovanie na `/dakujeme` |
 | Meranie | Google Tag Manager + Google Consent Mode v2, cookie lišta `vanilla-cookieconsent` |
 | SEO | Meta tagy, Open Graph, JSON-LD (Organization, FAQPage), sitemap, robots.txt |
 | Hosting | Netlify (`netlify.toml`), Node 22 |
@@ -51,7 +51,7 @@ Beží na doméne **go.growiagroup.sk**, hostovaný na Netlify, nasadzovaný aut
 │   │   └── site.ts         JEDINÉ miesto pre doménu, názov, GTM ID, kontakty, firemné údaje
 │   ├── data/               všetky texty webu (typované objekty), bez CMS
 │   ├── layouts/            Layout.astro (html skeleton, fonty, SEO, GTM)
-│   ├── lib/                čistá logika (validácia formulára, dataLayer helper)
+│   ├── lib/                čistá logika (validácia formulára, súhlas, štruktúrované dáta)
 │   ├── pages/              routy: /, /dakujeme, /ochrana-osobnych-udajov, /zasady-cookies, 404
 │   └── styles/global.css   Tailwind + dizajnové tokeny (@theme) + globálne štýly
 ├── astro.config.mjs
@@ -105,10 +105,11 @@ ktoré sa nemajú spracovávať (favicony, OG obrázok, fonty).
   v sekcii **Forms → konzultacia**.
 - **Notifikácie** (e-mail pri novej žiadosti) sa nastavujú v Netlify:
   *Site configuration → Forms → Form notifications → Add notification → Email notification*.
-- Odosielanie prebieha cez `fetch` na `/`, úspech aj chyba sa zobrazia priamo vo formulári.
-  Bez JavaScriptu sa formulár odošle klasicky a Netlify presmeruje na `/dakujeme`.
-- Po úspešnom odoslaní sa do `dataLayer` pošle event `generate_lead`
-  (parametre: `form_name`, `challenge`).
+- Odosielanie prebieha cez `fetch` na `/`; chyba servera sa zobrazí priamo vo formulári,
+  po úspechu sa prejde na `/dakujeme`. Bez JavaScriptu sa formulár odošle klasicky
+  a Netlify presmeruje na `/dakujeme` tiež.
+- Konverzný event `generate_lead` sa do `dataLayer` posiela na stránke `/dakujeme`
+  (`src/pages/dakujeme.astro`), ktorá sa zobrazí len po úspešnom odoslaní.
 
 ## Meranie a cookies
 
@@ -128,8 +129,8 @@ ktoré sa nemajú spracovávať (favicony, OG obrázok, fonty).
 
 ### Nastavenie v GTM
 V kontajneri treba vytvoriť trigger typu *Custom Event* s názvom `generate_lead` a naviazať naň
-konverzný tag (GA4 event / Google Ads conversion). Premenné `form_name` a `challenge` sú dostupné
-ako *Data Layer Variable*. Tagy GA4 a Google Ads v GTM rešpektujú Consent Mode automaticky.
+konverzný tag (GA4 event / Google Ads conversion). Tagy GA4 a Google Ads v GTM rešpektujú
+Consent Mode automaticky.
 
 ## Nasadenie (Netlify + GitHub)
 
@@ -152,7 +153,7 @@ ako *Data Layer Variable*. Tagy GA4 a Google Ads v GTM rešpektujú Consent Mode
 
 ## Testy a kontrola kvality
 
-- `npm test` – jednotkové testy (`vitest`) pre validáciu formulára, dataLayer, mapovanie súhlasu,
+- `npm test` – jednotkové testy (`vitest`) pre validáciu formulára, mapovanie súhlasu,
   štruktúrované dáta a načítanie fontov.
 - `npm run check` – `astro check` (typy v `.astro` aj `.ts` súboroch).
 - Netlify spúšťa iba `npm run build`; testy spúšťajte lokálne pred pushom.

@@ -2,10 +2,10 @@
 /**
  * Formulár žiadosti o konzultáciu – Netlify Forms.
  * - Bez JS: klasický POST, Netlify presmeruje na /dakujeme.
- * - S JS: validácia, odoslanie cez fetch, stavy priamo v karte, event generate_lead.
+ * - S JS: validácia, odoslanie cez fetch, po úspechu presmerovanie na /dakujeme
+ *   (tam sa posiela konverzný event generate_lead), chyba servera priamo v karte.
  */
 import Button from '@/components/ui/Button.astro';
-import Icon from '@/components/ui/Icon.astro';
 import ChipRadio from './ChipRadio.astro';
 import FormField from './FormField.astro';
 import { consultation } from '@/data/consultation';
@@ -17,15 +17,8 @@ const f = consultation.form;
 <div
   class="flex-[6_1_400px] min-w-0 p-[clamp(24px,4vw,44px)] bg-bg text-ink rounded-sm shadow-form"
   data-consultation
-  data-form-name={f.name}
   data-other-value={f.otherValue}
 >
-  <div class="flex flex-col gap-4 items-start py-3" data-success hidden tabindex="-1">
-    <Icon name="check" class="text-accent" />
-    <h3 class="m-0 font-serif font-medium text-[28px]">{f.success.title}</h3>
-    <p class="m-0 text-ink-2">{f.success.text}</p>
-  </div>
-
   <form
     name={f.name}
     method="POST"
@@ -101,7 +94,6 @@ const f = consultation.form;
 
 <script>
   import { consultation } from '@/data/consultation';
-  import { pushGenerateLead } from '@/lib/dataLayer';
   import { FORM_FIELDS, isValid, validateForm, type FormErrors, type FormField } from '@/lib/validateForm';
 
   const labels: Record<FormField, string> = {
@@ -114,9 +106,7 @@ const f = consultation.form;
     const form = root.querySelector<HTMLFormElement>('form');
     if (!form) return;
 
-    const formName = root.dataset.formName ?? 'konzultacia';
     const otherValue = root.dataset.otherValue ?? 'ine';
-    const success = root.querySelector<HTMLElement>('[data-success]');
     const summary = form.querySelector<HTMLElement>('[data-summary]');
     const summaryList = form.querySelector<HTMLElement>('[data-summary-list]');
     const serverError = form.querySelector<HTMLElement>('[data-server-error]');
@@ -199,14 +189,8 @@ const f = consultation.form;
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-        const challenge = (form.elements.namedItem('challenge') as RadioNodeList | null)?.value ?? '';
-        pushGenerateLead(formName, challenge);
-
-        form.hidden = true;
-        if (success) {
-          success.hidden = false;
-          success.focus();
-        }
+        // Rovnaký cieľ ako pri odoslaní bez JavaScriptu – ďakovacia stránka posiela event generate_lead.
+        window.location.assign(form.getAttribute('action') ?? '/dakujeme');
       } catch {
         if (serverError) serverError.hidden = false;
         setSubmitting(false);
