@@ -98,6 +98,11 @@ Zdrojové obrázky sú v `src/assets/`. Používajte komponent `<Image>` / `<Pic
 Astro pri builde vygeneruje AVIF/WebP vo viacerých veľkostiach. Do `public/` patria len súbory,
 ktoré sa nemajú spracovávať (favicony, OG obrázok, fonty).
 
+Fotografie tímu sú v `src/assets/images/team/` a priraďujú sa v `src/data/team.ts`
+(`groupPhoto` pre spoločnú fotografiu 3:2, `photo` pre portréty 4:5). Spoločná fotografia sa
+zobrazuje v pomere 589:248 s orezom posunutým k hornému okraju (`object-[50%_20%]`
+v `src/components/sections/Team.astro`). Ak sa fotografia vymaže, zobrazí sa pôvodný zástupný blok.
+
 ## Formulár (Netlify Forms)
 
 - Formulár má atribút `data-netlify="true"`, `name="konzultacia"` a honeypot pole `bot-field`.
@@ -170,7 +175,5 @@ Consent Mode automaticky.
 
 - [ ] Overiť, že Adobe Fonts kit má povolenú doménu `go.growiagroup.sk` a font display nastavený na `swap`
 - [ ] Doplniť texty stránok *Ochrana osobných údajov* a *Zásady cookies*
-- [ ] Doplniť spoločnú fotografiu zakladateliek (3:2) a portréty (4:5) v `src/data/team.ts`
-      (import obrázka zo `src/assets/images/` a priradenie do `groupPhoto` / `photo`)
 - [ ] Nastaviť e-mailové notifikácie formulára v Netlify
 - [ ] Overiť doručenie testovacej žiadosti z produkčnej domény
